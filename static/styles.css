@@ -22,8 +22,9 @@ body {
 }
 
 .step {
-    display: none;
-    animation: fadeIn 0.3s ease-in;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
 .step.active {
@@ -64,12 +65,23 @@ h2 {
     transform: translateY(-2px);
 }
 
-/* Увеличенная кнопка */
+/* Остальные стили остаются как в предыдущей версии */
 .btn-secondary {
+    background: none;
+    border: 2px solid var(--primary-blue);
+    color: var(--primary-blue);
     padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
     font-size: 15px;
+    transition: all 0.3s ease;
     flex: 1;
 }
+
+.btn-secondary:hover {
+    background: rgba(59, 139, 234, 0.1);
+}
+
 
 /* Фиксированная высота списка с прокруткой */
 .user-list {
@@ -79,15 +91,13 @@ h2 {
 
 /* Контейнер для кнопок */
 .step-buttons {
-    position: sticky;
-    bottom: 0;
-    background: var(--dark-bg);
-    padding: 10px 0;
     display: flex;
     gap: 10px;
+    margin-top: 20px;
+    flex-wrap: wrap;
 }
 
-/* Новая кнопка "Назад" */
+/* Кнопка Назад (оранжевая версия) */
 .btn-back {
     background: none;
     border: 2px solid var(--accent-orange);
@@ -95,7 +105,14 @@ h2 {
     padding: 12px 20px;
     border-radius: 8px;
     cursor: pointer;
+    font-size: 15px;
+    transition: all 0.3s ease;
     flex: 1;
+}
+
+.btn-back:hover {
+    background: rgba(253, 111, 61, 0.1);
+    transform: translateY(-2px);
 }
 
 .user-item {
@@ -126,14 +143,39 @@ h2 {
     font-weight: bold;
 }
 
+/* Поле ввода имени */
 .text-input {
     width: 100%;
-    padding: 12px;
+    padding: 14px 16px;
     margin: 10px 0;
     background: var(--input-bg);
-    border: 2px solid var(--border-color);
+    border: 2px solid var(--primary-blue);
     border-radius: 8px;
     color: var(--light-text);
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.text-input:focus {
+    outline: none;
+    border-color: var(--accent-orange);
+    box-shadow: 0 0 0 3px rgba(253, 111, 61, 0.2);
+}
+
+/* Адаптивная форма */
+@media (max-width: 480px) {
+    .container {
+        padding: 10px;
+    }
+    
+    .btn-primary, .btn-secondary {
+        padding: 14px 20px;
+        font-size: 16px;
+    }
+    
+    .user-list {
+        max-height: 55vh;
+    }
 }
 
 .status-message {
