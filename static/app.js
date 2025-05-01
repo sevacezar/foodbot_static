@@ -159,3 +159,15 @@ async function filterUsers() {
         showError('Ошибка фильтрации');
     }
 }
+
+function backToStep2() {
+    showStep('step2');
+    // Сброс поиска при возврате
+    document.getElementById('search').value = '';
+    filterUsers();
+}
+
+
+function backToMenuLink() {
+    showStep('menuLink');
+}

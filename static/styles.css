@@ -22,13 +22,15 @@ body {
 }
 
 .step {
+    display: none; /* Добавлено это свойство */
     max-width: 500px;
     margin: 0 auto;
     padding: 20px;
+    animation: fadeIn 0.3s ease-in;
 }
 
 .step.active {
-    display: block;
+    display: block; /* Убедитесь, что это свойство присутствует */
 }
 
 h2 {
@@ -80,6 +82,7 @@ h2 {
 
 .btn-secondary:hover {
     background: rgba(59, 139, 234, 0.1);
+    transform: translateY(-2px);
 }
 
 
@@ -129,8 +132,28 @@ h2 {
 .search-input {
     width: 100%;
     margin-bottom: 15px;
-    padding: 14px 16px;
-    font-size: 16px;
+    padding: 12px 14px;
+    font-size: clamp(14px, 3.5vw, 16px); /* Адаптивный размер текста */
+    border: 2px solid var(--primary-blue);
+    border-radius: 8px;
+    background: var(--input-bg);
+    color: var(--light-text);
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 480px) {
+    .search-input {
+        padding: 10px 12px;
+        font-size: clamp(13px, 4vw, 15px); /* Ещё более адаптивный текст */
+        margin-bottom: 12px;
+    }
+}
+
+@media (max-width: 360px) {
+    .search-input {
+        padding: 8px 10px;
+        font-size: clamp(12px, 4.5vw, 14px);
+    }
 }
 
 .menu-link {
@@ -189,3 +212,4 @@ h2 {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
+

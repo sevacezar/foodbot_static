@@ -146,6 +146,9 @@ function showNameInput() {
 
 function backToStep2() {
     showStep('step2');
+    // Сброс поиска при возврате
+    document.getElementById('search').value = '';
+    filterUsers();
 }
 
 function filterUsers() {
@@ -166,4 +169,9 @@ function filterUsers() {
 
 function backToStep1() {
     showStep('step1');
+}
+
+
+function backToMenuLink() {
+    showStep('menuLink');
 }

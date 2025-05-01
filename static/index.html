@@ -35,8 +35,10 @@
         <div id="newUser" class="step">
             <h2>Добавление нового сотрудника</h2>
             <input type="text" id="userName" class="text-input" placeholder="Полное ФИО">
-            <button class="btn-primary" onclick="addUser()">Подтвердить</button>
-            <button class="btn-secondary" onclick="backToStep2()">Назад</button>
+            <div class="step-buttons">
+                <button class="btn-primary" onclick="addUser()">Подтвердить</button>
+                <button class="btn-back" onclick="backToStep2()">Назад</button>
+            </div>
         </div>
 
         <!-- Menu Link -->
@@ -44,14 +46,20 @@
             <h2>Меню кафе</h2>
             <p>Для <span id="officeName"></span> офиса доступно по ссылке:</p>
             <a href="https://cafe.example.com" class="menu-link" target="_blank">Открыть меню →</a>
-            <button class="btn-primary" onclick="showOrderForm()">Перейти к заказу</button>
+            <div class="step-buttons">
+                <button class="btn-primary" onclick="showOrderForm()">Перейти к заказу</button>
+                <button class="btn-back" onclick="backToStep2()">Назад</button>
+            </div>
         </div>
 
         <!-- Order Form -->
         <div id="orderForm" class="step">
             <h2>Ваш заказ</h2>
             <input type="text" id="dish" class="text-input" placeholder="Введите название блюда">
-            <button id="submitBtn" class="btn-primary" onclick="submitOrder()">Подтвердить заказ</button>
+            <div class="step-buttons">
+                <button id="submitBtn" class="btn-primary" onclick="submitOrder()">Подтвердить заказ</button>
+                <button class="btn-back" onclick="backToMenuLink()">Назад</button>
+            </div>
             <div id="orderStatus" class="status-message"></div>
         </div>
     </div>
