@@ -63,6 +63,16 @@ function showMenuLink() {
     showStep('menuLink');
 }
 
+function showOrderForm() {
+    showStep('orderForm');
+    
+    // Если пользователь новый - сразу показать пустое поле
+    if (currentState.isNewUser) {
+        document.getElementById('dish').value = '';
+        document.getElementById('submitBtn').textContent = 'Сделать заказ';
+    }
+}
+
 async function submitOrder() {
     const dishInput = document.getElementById('dish');
     if (!dishInput.value.trim()) {
