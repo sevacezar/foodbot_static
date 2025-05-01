@@ -185,6 +185,14 @@ form {
     margin: 20px 0;
     text-align: center;
     font-weight: bold;
+    color: var(--light-text);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.menu-link:hover {
+    background: var(--primary-blue);
+    transform: translateY(-2px);
 }
 
 .status-message {
