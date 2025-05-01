@@ -1,0 +1,127 @@
+:root {
+    --primary-blue: #3B8BEA;
+    --accent-orange: #FD6F3D;
+    --dark-bg: #1A1D23;
+    --light-text: #FFFFFF;
+    --input-bg: #2D3038;
+    --border-color: #3B8BEA;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: var(--dark-bg);
+    color: var(--light-text);
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.step {
+    display: none;
+    animation: fadeIn 0.3s ease-in;
+}
+
+.step.active {
+    display: block;
+}
+
+h2 {
+    color: var(--primary-blue);
+    margin-bottom: 1.5rem;
+}
+
+.select-box {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    background: var(--input-bg);
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--light-text);
+    font-size: 16px;
+}
+
+.btn-primary {
+    background: var(--primary-blue);
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    width: 100%;
+    margin-top: 15px;
+}
+
+.btn-primary:hover {
+    background: var(--accent-orange);
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background: none;
+    border: 2px solid var(--primary-blue);
+    color: var(--primary-blue);
+    margin-top: 10px;
+}
+
+.user-list {
+    margin: 15px 0;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.user-item {
+    padding: 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.user-item:hover {
+    background: var(--input-bg);
+}
+
+.search-input {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.menu-link {
+    display: block;
+    padding: 15px;
+    background: var(--input-bg);
+    border-radius: 8px;
+    margin: 20px 0;
+    text-align: center;
+    font-weight: bold;
+}
+
+.text-input {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    background: var(--input-bg);
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--light-text);
+}
+
+.status-message {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}

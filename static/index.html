@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MadDevs Food Order</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="app_mock.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Step 1: Office Selection -->
+        <div id="step1" class="step active">
+            <h2>Выберите офис</h2>
+            <select id="office" class="select-box">
+                <option value="north">Северный офис</option>
+                <option value="south">Южный офис</option>
+            </select>
+            <button class="btn-primary" onclick="loadUsers()">Далее</button>
+        </div>
+
+        <!-- Step 2: User Selection -->
+        <div id="step2" class="step">
+            <h2>Найдите себя</h2>
+            <input type="text" id="search" class="search-input" placeholder="Введите имя..." onkeyup="filterUsers()">
+            <div id="userList" class="user-list"></div>
+            <button class="btn-secondary" onclick="showNameInput()">Я новый сотрудник</button>
+        </div>
+
+        <!-- New User Form -->
+        <div id="newUser" class="step">
+            <h2>Добавление нового сотрудника</h2>
+            <input type="text" id="userName" class="text-input" placeholder="Полное ФИО">
+            <button class="btn-primary" onclick="addUser()">Подтвердить</button>
+            <button class="btn-secondary" onclick="backToStep2()">Назад</button>
+        </div>
+
+        <!-- Menu Link -->
+        <div id="menuLink" class="step">
+            <h2>Меню кафе</h2>
+            <p>Для <span id="officeName"></span> офиса доступно по ссылке:</p>
+            <a href="https://cafe.example.com" class="menu-link" target="_blank">Открыть меню →</a>
+            <button class="btn-primary" onclick="showOrderForm()">Перейти к заказу</button>
+        </div>
+
+        <!-- Order Form -->
+        <div id="orderForm" class="step">
+            <h2>Ваш заказ</h2>
+            <input type="text" id="dish" class="text-input" placeholder="Введите название блюда">
+            <button id="submitBtn" class="btn-primary" onclick="submitOrder()">Подтвердить заказ</button>
+            <div id="orderStatus" class="status-message"></div>
+        </div>
+    </div>
+</body>
+</html>
