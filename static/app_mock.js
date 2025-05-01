@@ -9,7 +9,23 @@ const mockUsers = [
     { id: 1, name: "Иван Петров", office: "north" },
     { id: 2, name: "Мария Сидорова", office: "south" },
     { id: 3, name: "Алексей Иванов", office: "north" },
-    { id: 4, name: "Ольга Николаева", office: "south" }
+    { id: 4, name: "Ольга Николаева", office: "south" },
+    { id: 5, name: "Дмитрий Смирнов", office: "north" },
+    { id: 6, name: "Екатерина Волкова", office: "south" },
+    { id: 7, name: "Сергей Попов", office: "north" },
+    { id: 8, name: "Анна Новикова", office: "south" },
+    { id: 9, name: "Андрей Морозов", office: "north" },
+    { id: 10, name: "Юлия Зайцева", office: "south" },
+    { id: 11, name: "Павел Павлов", office: "north" },
+    { id: 12, name: "Татьяна Семенова", office: "south" },
+    { id: 13, name: "Николай Федоров", office: "north" },
+    { id: 14, name: "Елена Петрова", office: "south" },
+    { id: 15, name: "Артем Козлов", office: "north" },
+    { id: 16, name: "Оксана Лебедева", office: "south" },
+    { id: 17, name: "Владимир Соколов", office: "north" },
+    { id: 18, name: "Марина Крылова", office: "south" },
+    { id: 19, name: "Григорий Новиков", office: "north" },
+    { id: 20, name: "Виктория Степанова", office: "south" }
 ];
 
 let mockOrders = {
@@ -145,4 +161,9 @@ function filterUsers() {
             ${user.name}
         </div>
     `).join('');
+}
+
+
+function backToStep1() {
+    showStep('step1');
 }

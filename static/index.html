@@ -23,9 +23,12 @@
         <!-- Step 2: User Selection -->
         <div id="step2" class="step">
             <h2>Найдите себя</h2>
-            <input type="text" id="search" class="search-input" placeholder="Введите имя..." onkeyup="filterUsers()">
+            <input type="text" id="search" class="search-input" placeholder="Введите имя..." oninput="filterUsers()">
             <div id="userList" class="user-list"></div>
-            <button class="btn-secondary" onclick="showNameInput()">Я новый сотрудник</button>
+            <div class="step-buttons">
+                <button class="btn-secondary" onclick="showNameInput()">Я новый сотрудник</button>
+                <button class="btn-back" onclick="backToStep1()">Назад</button>
+            </div>
         </div>
 
         <!-- New User Form -->

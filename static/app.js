@@ -127,3 +127,35 @@ async function addUser() {
     };
     showMenuLink();
 }
+
+
+function backToStep1() {
+    showStep('step1');
+}
+
+async function filterUsers() {
+    const searchTerm = document.getElementById('search').value.toLowerCase();
+    
+    try {
+        // Получаем пользователей только при первом переходе на шаг 2
+        if (!currentState.cachedUsers) {
+            const response = await fetch(`/api/users?office=${currentState.office}`);
+            currentState.cachedUsers = await response.json();
+        }
+
+        const filtered = currentState.cachedUsers.filter(u => 
+            u.name.toLowerCase().includes(searchTerm)
+        );
+
+        const userList = document.getElementById('userList');
+        userList.innerHTML = filtered.map(user => `
+            <div class="user-item" 
+                 data-id="${user.id}" 
+                 onclick="selectUser(${user.id}, '${user.name.replace("'", "\\'")}')">
+                ${user.name}
+            </div>
+        `).join('');
+    } catch (error) {
+        showError('Ошибка фильтрации');
+    }
+}

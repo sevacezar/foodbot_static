@@ -64,19 +64,38 @@ h2 {
     transform: translateY(-2px);
 }
 
+/* Увеличенная кнопка */
 .btn-secondary {
-    background: none;
-    border: 2px solid var(--primary-blue);
-    color: var(--primary-blue);
-    margin-top: 10px;
+    padding: 12px 20px;
+    font-size: 15px;
+    flex: 1;
 }
 
+/* Фиксированная высота списка с прокруткой */
 .user-list {
-    margin: 15px 0;
-    border: 2px solid var(--border-color);
-    border-radius: 8px;
-    max-height: 200px;
+    max-height: 50vh;
     overflow-y: auto;
+}
+
+/* Контейнер для кнопок */
+.step-buttons {
+    position: sticky;
+    bottom: 0;
+    background: var(--dark-bg);
+    padding: 10px 0;
+    display: flex;
+    gap: 10px;
+}
+
+/* Новая кнопка "Назад" */
+.btn-back {
+    background: none;
+    border: 2px solid var(--accent-orange);
+    color: var(--accent-orange);
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    flex: 1;
 }
 
 .user-item {
@@ -89,9 +108,12 @@ h2 {
     background: var(--input-bg);
 }
 
+/* Увеличенное поле поиска */
 .search-input {
     width: 100%;
     margin-bottom: 15px;
+    padding: 14px 16px;
+    font-size: 16px;
 }
 
 .menu-link {
