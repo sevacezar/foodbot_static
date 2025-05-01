@@ -1,67 +1,77 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#1A1D23">
+    <meta name="description" content="MadDevs Food Order - Система заказа еды для сотрудников">
     <title>MadDevs Food Order</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="app_mock.js"></script>
 </head>
 <body>
-    <div class="container">
+    <main class="container">
         <!-- Step 1: Office Selection -->
-        <div id="step1" class="step active">
-            <h2>Выберите офис</h2>
-            <select id="office" class="select-box">
-                <option value="north">Северный офис</option>
-                <option value="south">Южный офис</option>
-            </select>
-            <button class="btn-primary" onclick="loadUsers()">Далее</button>
-        </div>
+        <section id="step1" class="step active" aria-labelledby="step1-title">
+            <h2 id="step1-title">Выберите офис</h2>
+            <form onsubmit="loadUsers(); return false;">
+                <select id="office" class="select-box" aria-label="Выберите офис" required>
+                    <option value="north">Северный офис</option>
+                    <option value="south">Южный офис</option>
+                </select>
+                <button type="submit" class="btn-primary">Далее</button>
+            </form>
+        </section>
 
         <!-- Step 2: User Selection -->
-        <div id="step2" class="step">
-            <h2>Найдите себя</h2>
-            <input type="text" id="search" class="search-input" placeholder="Введите имя..." oninput="filterUsers()">
-            <div id="userList" class="user-list"></div>
-            <div class="step-buttons">
-                <button class="btn-secondary" onclick="showNameInput()">Я новый сотрудник</button>
-                <button class="btn-back" onclick="backToStep1()">Назад</button>
-            </div>
-        </div>
+        <section id="step2" class="step" aria-labelledby="step2-title">
+            <h2 id="step2-title">Найдите себя</h2>
+            <form onsubmit="return false;">
+                <input type="text" id="search" class="search-input" placeholder="Введите имя..." oninput="filterUsers()" aria-label="Поиск сотрудника">
+                <div id="userList" class="user-list" role="listbox" aria-label="Список сотрудников"></div>
+                <div class="step-buttons">
+                    <button type="button" class="btn-secondary" onclick="showNameInput()">Я новый сотрудник</button>
+                    <button type="button" class="btn-back" onclick="backToStep1()">Назад</button>
+                </div>
+            </form>
+        </section>
 
         <!-- New User Form -->
-        <div id="newUser" class="step">
-            <h2>Добавление нового сотрудника</h2>
-            <input type="text" id="userName" class="text-input" placeholder="Полное ФИО">
-            <div class="step-buttons">
-                <button class="btn-primary" onclick="addUser()">Подтвердить</button>
-                <button class="btn-back" onclick="backToStep2()">Назад</button>
-            </div>
-        </div>
+        <section id="newUser" class="step" aria-labelledby="newUser-title">
+            <h2 id="newUser-title">Добавление нового сотрудника</h2>
+            <form onsubmit="addUser(); return false;">
+                <input type="text" id="userName" class="text-input" placeholder="Полное ФИО" required aria-label="ФИО нового сотрудника">
+                <div class="step-buttons">
+                    <button type="submit" class="btn-primary">Подтвердить</button>
+                    <button type="button" class="btn-back" onclick="backToStep2()">Назад</button>
+                </div>
+            </form>
+        </section>
 
         <!-- Menu Link -->
-        <div id="menuLink" class="step">
-            <h2>Меню кафе</h2>
+        <section id="menuLink" class="step" aria-labelledby="menuLink-title">
+            <h2 id="menuLink-title">Меню кафе</h2>
             <p>Для <span id="officeName"></span> офиса доступно по ссылке:</p>
-            <a href="https://cafe.example.com" class="menu-link" target="_blank">Открыть меню →</a>
+            <a href="https://cafe.example.com" class="menu-link" target="_blank" rel="noopener noreferrer">Открыть меню →</a>
             <div class="step-buttons">
-                <button class="btn-primary" onclick="showOrderForm()">Перейти к заказу</button>
-                <button class="btn-back" onclick="backToStep2()">Назад</button>
+                <button type="button" class="btn-primary" onclick="showOrderForm()">Перейти к заказу</button>
+                <button type="button" class="btn-back" onclick="backToStep2()">Назад</button>
             </div>
-        </div>
+        </section>
 
         <!-- Order Form -->
-        <div id="orderForm" class="step">
-            <h2>Ваш заказ</h2>
-            <input type="text" id="dish" class="text-input" placeholder="Введите название блюда">
-            <div class="step-buttons">
-                <button id="submitBtn" class="btn-primary" onclick="submitOrder()">Подтвердить заказ</button>
-                <button class="btn-back" onclick="backToMenuLink()">Назад</button>
-            </div>
-            <div id="orderStatus" class="status-message"></div>
-        </div>
-    </div>
+        <section id="orderForm" class="step" aria-labelledby="orderForm-title">
+            <h2 id="orderForm-title">Ваш заказ</h2>
+            <form onsubmit="submitOrder(); return false;">
+                <input type="text" id="dish" class="text-input" placeholder="Введите название блюда" required aria-label="Название блюда">
+                <div class="step-buttons">
+                    <button type="submit" id="submitBtn" class="btn-primary">Подтвердить заказ</button>
+                    <button type="button" class="btn-back" onclick="backToMenuLink()">Назад</button>
+                </div>
+                <div id="orderStatus" class="status-message" role="status" aria-live="polite"></div>
+            </form>
+        </section>
+    </main>
 </body>
 </html>

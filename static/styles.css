@@ -5,6 +5,10 @@
     --light-text: #FFFFFF;
     --input-bg: #2D3038;
     --border-color: #3B8BEA;
+    --spacing-unit: 16px;
+    --border-radius: 8px;
+    --input-padding: 12px;
+    --element-width: 100%;
 }
 
 body {
@@ -19,18 +23,19 @@ body {
 .container {
     max-width: 600px;
     margin: 0 auto;
+    padding: var(--spacing-unit);
 }
 
 .step {
-    display: none; /* Добавлено это свойство */
+    display: none;
     max-width: 500px;
     margin: 0 auto;
-    padding: 20px;
+    padding: var(--spacing-unit);
     animation: fadeIn 0.3s ease-in;
 }
 
 .step.active {
-    display: block; /* Убедитесь, что это свойство присутствует */
+    display: block;
 }
 
 h2 {
@@ -38,46 +43,59 @@ h2 {
     margin-bottom: 1.5rem;
 }
 
-.select-box {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
+/* Common input styles */
+.select-box,
+.search-input,
+.text-input {
+    width: var(--element-width);
+    padding: var(--input-padding);
+    margin: calc(var(--spacing-unit) / 2) 0;
     background: var(--input-bg);
     border: 2px solid var(--border-color);
-    border-radius: 8px;
+    border-radius: var(--border-radius);
     color: var(--light-text);
     font-size: 16px;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+/* Common button styles */
+.btn-primary,
+.btn-secondary,
+.btn-back {
+    width: var(--element-width);
+    padding: var(--input-padding);
+    margin: calc(var(--spacing-unit) / 2) 0;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    text-align: center;
+    box-sizing: border-box;
 }
 
 .btn-primary {
     background: var(--primary-blue);
     color: white;
-    padding: 12px 24px;
     border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: all 0.3s ease;
-    width: 100%;
-    margin-top: 15px;
 }
 
-.btn-primary:hover {
-    background: var(--accent-orange);
-    transform: translateY(-2px);
-}
-
-/* Остальные стили остаются как в предыдущей версии */
 .btn-secondary {
     background: none;
     border: 2px solid var(--primary-blue);
     color: var(--primary-blue);
-    padding: 12px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 15px;
-    transition: all 0.3s ease;
-    flex: 1;
+}
+
+.btn-back {
+    background: none;
+    border: 2px solid var(--accent-orange);
+    color: var(--accent-orange);
+}
+
+/* Button hover states */
+.btn-primary:hover {
+    background: var(--accent-orange);
+    transform: translateY(-2px);
 }
 
 .btn-secondary:hover {
@@ -85,37 +103,68 @@ h2 {
     transform: translateY(-2px);
 }
 
+.btn-back:hover {
+    background: rgba(253, 111, 61, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Step buttons container */
+.step-buttons {
+    display: flex;
+    gap: var(--spacing-unit);
+    margin-top: var(--spacing-unit);
+    flex-wrap: wrap;
+    width: var(--element-width);
+}
+
+.step-buttons button {
+    flex: 1;
+    min-width: 120px;
+    box-sizing: border-box;
+}
+
+/* Form styles */
+form {
+    width: var(--element-width);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-unit);
+}
+
+/* Input focus states */
+.select-box:focus,
+.search-input:focus,
+.text-input:focus {
+    outline: none;
+    border-color: var(--accent-orange);
+    box-shadow: 0 0 0 3px rgba(253, 111, 61, 0.2);
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+    :root {
+        --spacing-unit: 12px;
+        --input-padding: 10px;
+    }
+    
+    .container {
+        padding: var(--spacing-unit);
+    }
+    
+    .step-buttons {
+        flex-direction: column;
+        gap: calc(var(--spacing-unit) / 2);
+    }
+    
+    .step-buttons button {
+        width: 100%;
+    }
+}
 
 /* Фиксированная высота списка с прокруткой */
 .user-list {
     max-height: 50vh;
     overflow-y: auto;
-}
-
-/* Контейнер для кнопок */
-.step-buttons {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-    flex-wrap: wrap;
-}
-
-/* Кнопка Назад (оранжевая версия) */
-.btn-back {
-    background: none;
-    border: 2px solid var(--accent-orange);
-    color: var(--accent-orange);
-    padding: 12px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 15px;
-    transition: all 0.3s ease;
-    flex: 1;
-}
-
-.btn-back:hover {
-    background: rgba(253, 111, 61, 0.1);
-    transform: translateY(-2px);
 }
 
 .user-item {
@@ -128,34 +177,6 @@ h2 {
     background: var(--input-bg);
 }
 
-/* Увеличенное поле поиска */
-.search-input {
-    width: 100%;
-    margin-bottom: 15px;
-    padding: 12px 14px;
-    font-size: clamp(14px, 3.5vw, 16px); /* Адаптивный размер текста */
-    border: 2px solid var(--primary-blue);
-    border-radius: 8px;
-    background: var(--input-bg);
-    color: var(--light-text);
-    transition: all 0.3s ease;
-}
-
-@media (max-width: 480px) {
-    .search-input {
-        padding: 10px 12px;
-        font-size: clamp(13px, 4vw, 15px); /* Ещё более адаптивный текст */
-        margin-bottom: 12px;
-    }
-}
-
-@media (max-width: 360px) {
-    .search-input {
-        padding: 8px 10px;
-        font-size: clamp(12px, 4.5vw, 14px);
-    }
-}
-
 .menu-link {
     display: block;
     padding: 15px;
@@ -164,41 +185,6 @@ h2 {
     margin: 20px 0;
     text-align: center;
     font-weight: bold;
-}
-
-/* Поле ввода имени */
-.text-input {
-    width: 100%;
-    padding: 14px 16px;
-    margin: 10px 0;
-    background: var(--input-bg);
-    border: 2px solid var(--primary-blue);
-    border-radius: 8px;
-    color: var(--light-text);
-    font-size: 16px;
-    transition: all 0.3s ease;
-}
-
-.text-input:focus {
-    outline: none;
-    border-color: var(--accent-orange);
-    box-shadow: 0 0 0 3px rgba(253, 111, 61, 0.2);
-}
-
-/* Адаптивная форма */
-@media (max-width: 480px) {
-    .container {
-        padding: 10px;
-    }
-    
-    .btn-primary, .btn-secondary {
-        padding: 14px 20px;
-        font-size: 16px;
-    }
-    
-    .user-list {
-        max-height: 55vh;
-    }
 }
 
 .status-message {
