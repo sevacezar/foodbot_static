@@ -38,9 +38,17 @@ async function loadUsers() {
 }
 
 function selectUser(userId, userName) {
-    currentState.user = { id: userId, name: userName };
-    checkExistingOrder(userId);
-    showMenuLink();
+    const userElement = document.querySelector(`[data-id="${userId}"]`);
+    
+    // Показать визуальный выбор
+    userElement.classList.add('selected');
+    
+    setTimeout(() => {
+        currentState.user = { id: userId, name: userName };
+        checkExistingOrder(userId);
+        showMenuLink();
+        userElement.classList.remove('selected');
+    }, 800); // Задержка перед переходом
 }
 
 async function checkExistingOrder(userId) {

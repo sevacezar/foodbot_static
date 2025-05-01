@@ -213,3 +213,14 @@ h2 {
     to { opacity: 1; transform: translateY(0); }
 }
 
+/* Анимация выбора пользователя */
+@keyframes user-selected {
+    0% { background: transparent; }
+    50% { background: rgba(253, 111, 61, 0.2); }
+    100% { background: transparent; }
+}
+
+.user-item.selected {
+    animation: user-selected 1s ease;
+    border: 2px solid var(--accent-orange);
+}
