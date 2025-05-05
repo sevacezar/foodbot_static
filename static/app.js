@@ -1,6 +1,6 @@
 const ENV = {
     DEVELOPMENT: {
-      API_URL: 'https://eafd-185-77-216-6.ngrok-free.app/', // ngrok URL
+      API_URL: 'https://eafd-185-77-216-6.ngrok-free.app', // ngrok URL
     },
     PRODUCTION: {
       API_URL: 'https://ваш-продакшен-сервер.com',
@@ -12,7 +12,6 @@ const currentEnv = ENV.DEVELOPMENT; // Установите нужную сре�
 const API_BASE_URL = currentEnv.API_URL;
 
 let currentState = {
-    office: null,
     orderData: {
         user_name: null,
         office_name: null,
@@ -34,11 +33,12 @@ function showStep(stepId) {
 
 async function loadUsers() {
     const office = document.getElementById('office').value;
-    currentState.office = office;
-    currentState.orderData.office_name = office === 'north' ? 'North' : 'South';
+    currentState.orderData.office_name = office;
     
     try {
-        const response = await fetch(`${API_BASE_URL}/api/users?office=${office}`);
+        const response = await fetch(`${API_BASE_URL}/api/users?office=${office}`, {
+            headers: {'ngrok-skip-browser-warning': 'true'}
+        });
         if (!response.ok) {
             const errorData = await response.json();
             throw new Error(errorData.error || 'Ошибка сервера');
@@ -55,7 +55,7 @@ async function loadUsers() {
                 ${user}
             </div>
         `).join('');
-        
+        currentState.cachedUsers = data.users;
         showStep('step2');
     } catch (error) {
         showError(error.message || 'Ошибка загрузки пользователей');
@@ -63,8 +63,13 @@ async function loadUsers() {
 }
 
 function selectUser(userName) {
-    const userElement = document.querySelector(`.user-item:contains('${userName}')`);
+    const userElements = document.querySelectorAll('.user-item');
     
+    const userElement = Array.from(userElements).find(el => el.textContent.includes(userName));
+    if (!userElement) {
+        showError('Пользователь не найден');
+        return;
+    }
     userElement.classList.add('selected');
     
     setTimeout(() => {
@@ -78,7 +83,10 @@ function selectUser(userName) {
 async function checkExistingOrder(userName) {
     try {
         const response = await fetch(
-            `${API_BASE_URL}/api/orders/${encodeURIComponent(userName)}?office=${currentState.orderData.office_name}`
+            `${API_BASE_URL}/api/orders/${encodeURIComponent(userName)}?office=${currentState.orderData.office_name}`, 
+            {
+                headers: {'ngrok-skip-browser-warning': 'true'}
+            }
         );
         if (!response.ok) {
             const errorData = await response.json();
@@ -118,7 +126,7 @@ async function submitOrder() {
     try {
         const response = await fetch(`${API_BASE_URL}/api/orders`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
             body: JSON.stringify({
                 username: currentState.orderData.user_name,
                 office: currentState.orderData.office_name,
@@ -178,12 +186,15 @@ async function filterUsers() {
     try {
         // Получаем пользователей только при первом переходе на шаг 2
         if (!currentState.cachedUsers) {
-            const response = await fetch(`${API_BASE_URL}/api/users?office=${currentState.orderData.office_name}`);
-            currentState.cachedUsers = await response.json().users;
+            const response = await fetch(`${API_BASE_URL}/api/users?office=${currentState.orderData.office_name}`, {
+                headers: {'ngrok-skip-browser-warning': 'true'}
+            });
+            const data = await response.json();
+            currentState.cachedUsers = data.users;
         }
 
         const filtered = currentState.cachedUsers.filter(u => 
-            u.name.toLowerCase().includes(searchTerm)
+            u.toLowerCase().includes(searchTerm)
         );
 
         const userList = document.getElementById('userList');

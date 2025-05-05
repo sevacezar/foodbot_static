@@ -1,0 +1,388 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+      "title": "Food Orders API",
+      "description": "API for managing food orders in Google Sheets",
+      "version": "1.0.0"
+    },
+    "paths": {
+      "/api/users": {
+        "get": {
+          "summary": "Get Users",
+          "description": "Get list of users for a specific office.\n\nArgs:\n    office (Literal[\"South\", \"North\"]): Name of the office to get users from\n\nReturns:\n    UsersResponse: List of users in the specified office\n\nRaises:\n    HTTPException: If there's an error retrieving users",
+          "operationId": "get_users_api_users_get",
+          "parameters": [
+            {
+              "name": "office",
+              "in": "query",
+              "required": true,
+              "schema": {
+                "enum": [
+                  "South",
+                  "North"
+                ],
+                "type": "string",
+                "description": "Office name",
+                "title": "Office"
+              },
+              "description": "Office name"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UsersResponse"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/orders/{username}": {
+        "get": {
+          "summary": "Get Order",
+          "description": "Get a user's order for the current date.\n\nArgs:\n    username (str): Username to get the order for\n    office (Literal[\"South\", \"North\"]): Name of the office\n\nReturns:\n    OrderResponse: The user's order details\n\nRaises:\n    HTTPException: If there's an error retrieving the order",
+          "operationId": "get_order_api_orders__username__get",
+          "parameters": [
+            {
+              "name": "username",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "title": "Username"
+              }
+            },
+            {
+              "name": "office",
+              "in": "query",
+              "required": true,
+              "schema": {
+                "enum": [
+                  "South",
+                  "North"
+                ],
+                "type": "string",
+                "description": "Office name",
+                "title": "Office"
+              },
+              "description": "Office name"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/OrderResponse"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/orders": {
+        "post": {
+          "summary": "Create Order",
+          "description": "Create or update a user's order.\n\nArgs:\n    order (OrderCreate): Order details including username, office, and order text\n\nReturns:\n    OrderResponse: The created/updated order details\n\nRaises:\n    HTTPException: If there's an error creating/updating the order",
+          "operationId": "create_order_api_orders_post",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderCreate"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/OrderResponse"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/api/food-data": {
+        "get": {
+          "summary": "Get Food Data",
+          "description": "Get food data for offices.\n\nReturns:\n    dict: Food data for requested offices",
+          "operationId": "get_food_data_api_food_data_get",
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/FoodDataResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "CafeDataResponse": {
+          "properties": {
+            "cafe_name": {
+              "type": "string",
+              "title": "Cafe Name"
+            },
+            "menu_label": {
+              "type": "string",
+              "title": "Menu Label"
+            },
+            "menu_url": {
+              "type": "string",
+              "title": "Menu Url"
+            },
+            "checkbox": {
+              "type": "string",
+              "enum": [
+                "TRUE",
+                "FALSE"
+              ],
+              "title": "Checkbox"
+            }
+          },
+          "type": "object",
+          "required": [
+            "cafe_name",
+            "menu_label",
+            "menu_url",
+            "checkbox"
+          ],
+          "title": "CafeDataResponse",
+          "description": "Model for cafe data"
+        },
+        "FoodDataResponse": {
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "title": "Success"
+            },
+            "error": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Error"
+            },
+            "cafes": {
+              "additionalProperties": {
+                "$ref": "#/components/schemas/CafeDataResponse"
+              },
+              "type": "object",
+              "title": "Cafes"
+            }
+          },
+          "type": "object",
+          "required": [
+            "success",
+            "cafes"
+          ],
+          "title": "FoodDataResponse",
+          "description": "Response model for food data"
+        },
+        "HTTPValidationError": {
+          "properties": {
+            "detail": {
+              "items": {
+                "$ref": "#/components/schemas/ValidationError"
+              },
+              "type": "array",
+              "title": "Detail"
+            }
+          },
+          "type": "object",
+          "title": "HTTPValidationError"
+        },
+        "OrderCreate": {
+          "properties": {
+            "username": {
+              "type": "string",
+              "title": "Username"
+            },
+            "office": {
+              "type": "string",
+              "enum": [
+                "South",
+                "North"
+              ],
+              "title": "Office"
+            },
+            "order": {
+              "type": "string",
+              "title": "Order"
+            }
+          },
+          "type": "object",
+          "required": [
+            "username",
+            "office",
+            "order"
+          ],
+          "title": "OrderCreate",
+          "description": "Model for creating a new order"
+        },
+        "OrderResponse": {
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "title": "Success"
+            },
+            "error": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Error"
+            },
+            "order": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Order"
+            }
+          },
+          "type": "object",
+          "required": [
+            "success"
+          ],
+          "title": "OrderResponse",
+          "description": "Response model for order"
+        },
+        "UsersResponse": {
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "title": "Success"
+            },
+            "error": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Error"
+            },
+            "users": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Users"
+            }
+          },
+          "type": "object",
+          "required": [
+            "success"
+          ],
+          "title": "UsersResponse",
+          "description": "Response model for users list"
+        },
+        "ValidationError": {
+          "properties": {
+            "loc": {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ]
+              },
+              "type": "array",
+              "title": "Location"
+            },
+            "msg": {
+              "type": "string",
+              "title": "Message"
+            },
+            "type": {
+              "type": "string",
+              "title": "Error Type"
+            }
+          },
+          "type": "object",
+          "required": [
+            "loc",
+            "msg",
+            "type"
+          ],
+          "title": "ValidationError"
+        }
+      }
+    }
+  }
