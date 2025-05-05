@@ -16,7 +16,13 @@ let currentState = {
         user_name: null,
         office_name: null,
         dish: null
-    }
+    },
+    cafeData: null
+};
+
+const OFFICE_TRANSLATION = {
+  North: 'Северного',
+  South: 'Южного'
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -105,10 +111,27 @@ async function checkExistingOrder(userName) {
     }
 }
 
-function showMenuLink() {
-    document.getElementById('officeName').textContent = currentState.orderData.office_name;
+async function showMenuLink() {
+  try {
+    const cafes = await loadCafeData();
+    const office = currentState.orderData.office_name;
+    
+    // Обновляем текст
+    document.getElementById('officeName').textContent = OFFICE_TRANSLATION[office];
+    
+    // Обновляем ссылку и название
+    const menuLink = document.querySelector('.menu-link');
+    const cafeInfo = cafes[office];
+    menuLink.href = cafeInfo.menu_url;
+    menuLink.innerHTML = `${cafeInfo.cafe_name} →`;
+    
     showStep('menuLink');
+  } catch (error) {
+    console.error('Ошибка:', error);
+    backToStep2();
+  }
 }
+
 
 function showOrderForm() {
     showStep('orderForm');
@@ -150,6 +173,26 @@ async function submitOrder() {
     } catch (error) {
         showError(error.message || 'Ошибка сохранения заказа');
     }
+}
+
+async function loadCafeData() {
+  if (currentState.cafeData) return currentState.cafeData;
+  
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/food-data`, {
+      headers: {'ngrok-skip-browser-warning': 'true'}
+    });
+    if (!response.ok) throw new Error('Ошибка загрузки данных');
+    
+    const data = await response.json();
+    if (!data.success) throw new Error(data.error);
+    
+    currentState.cafeData = data.cafes; // Кешируем
+    return data.cafes;
+  } catch (error) {
+    showError('Не удалось загрузить меню');
+    throw error;
+  }
 }
 
 // Вспомогательные функции
