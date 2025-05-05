@@ -1,7 +1,26 @@
+const ENV = {
+    DEVELOPMENT: {
+      API_URL: 'https://eafd-185-77-216-6.ngrok-free.app/', // ngrok URL
+    },
+    PRODUCTION: {
+      API_URL: 'https://ваш-продакшен-сервер.com',
+    }
+  }
+  
+const currentEnv = ENV.DEVELOPMENT; // Установите нужную среду (DEVELOPMENT или PRODUCTION)
+  
+const API_BASE_URL = currentEnv.API_URL;
+
 let currentState = {
     office: null,
     user: null,
-    isNewUser: false
+    isNewUser: false,
+    orderData: {
+        user_name: null,
+        office_name: null,
+        create_user: false,
+        dish: null
+    }
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -19,62 +38,76 @@ function showStep(stepId) {
 async function loadUsers() {
     const office = document.getElementById('office').value;
     currentState.office = office;
+    currentState.orderData.office_name = office === 'north' ? 'North' : 'South';
     
     try {
-        const response = await fetch(`/api/users?office=${office}`);
-        const users = await response.json();
-        
+        const response = await fetch(`${API_BASE_URL}/api/users?office=${office}`);
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Ошибка сервера');
+        }
+
+        const data = await response.json();
+        if (!data.success) {
+            throw new Error(data.error);
+        }
+
         const userList = document.getElementById('userList');
-        userList.innerHTML = users.map(user => `
-            <div class="user-item" data-id="${user.id}" onclick="selectUser(${user.id}, '${user.name}')">
-                ${user.name}
+        userList.innerHTML = data.users.map(user => `
+            <div class="user-item" onclick="selectUser('${user}')">
+                ${user}
             </div>
         `).join('');
         
         showStep('step2');
     } catch (error) {
-        showError('Ошибка загрузки пользователей');
+        showError(error.message || 'Ошибка загрузки пользователей');
     }
 }
 
-function selectUser(userId, userName) {
-    const userElement = document.querySelector(`[data-id="${userId}"]`);
+function selectUser(userName) {
+    const userElement = document.querySelector(`.user-item:contains('${userName}')`);
     
-    // Показать визуальный выбор
     userElement.classList.add('selected');
     
     setTimeout(() => {
-        currentState.user = { id: userId, name: userName };
-        checkExistingOrder(userId);
+        currentState.user = { name: userName };
+        currentState.orderData.user_name = userName;
+        currentState.orderData.create_user = false;
+        checkExistingOrder(userName);
         showMenuLink();
         userElement.classList.remove('selected');
-    }, 800); // Задержка перед переходом
+    }, 800);
 }
 
-async function checkExistingOrder(userId) {
+async function checkExistingOrder(userName) {
     try {
-        const response = await fetch(`/api/orders/${userId}`);
-        const order = await response.json();
+        const response = await etch(`${API_BASE_URL}/api/orders/${encodeURIComponent(userName)}?office=${currentState.orderData.office_name}`);
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Ошибка проверки заказа');
+        }
         
-        if (order.dish) {
-            document.getElementById('dish').value = order.dish;
+        const data = await response.json();
+        
+        if (data.order) {
+            document.getElementById('dish').value = data.order;
             document.getElementById('submitBtn').textContent = 'Изменить заказ';
         }
     } catch (error) {
         console.error('Order check failed:', error);
+        showError('Ошибка проверки заказа');
     }
 }
 
 function showMenuLink() {
-    document.getElementById('officeName').textContent = 
-        currentState.office === 'north' ? 'Северного' : 'Южного';
+    document.getElementById('officeName').textContent = currentState.orderData.office_name;
     showStep('menuLink');
 }
 
 function showOrderForm() {
     showStep('orderForm');
     
-    // Если пользователь новый - сразу показать пустое поле
     if (currentState.isNewUser) {
         document.getElementById('dish').value = '';
         document.getElementById('submitBtn').textContent = 'Сделать заказ';
@@ -84,29 +117,38 @@ function showOrderForm() {
 async function submitOrder() {
     const dishInput = document.getElementById('dish');
     if (!dishInput.value.trim()) {
-        showError('Введите название блюда');
+        showError('Введите название блюда/блюд');
         return;
     }
 
+    currentState.orderData.dish = dishInput.value.trim();
+
     try {
-        const response = await fetch('/api/orders', {
+        const response = await fetch(`${API_BASE_URL}/api/orders`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                user_id: currentState.user.id,
-                dish: dishInput.value.trim()
-            })
+                username: currentState.orderData.user_name,
+                office: currentState.orderData.office_name,
+                order: currentState.orderData.dish
+        })
         });
 
-        if (response.ok) {
-            Telegram.WebApp.showAlert('Заказ успешно сохранён!', () => {
-                Telegram.WebApp.close();
-            });
-        } else {
-            showError('Ошибка сохранения заказа');
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Ошибка сохранения');
         }
+
+        const data = await response.json();
+        if (!data.success) {
+            throw new Error(data.error);
+        }
+
+        Telegram.WebApp.showAlert('Заказ успешно сохранён!', () => {
+            Telegram.WebApp.close();
+        });
     } catch (error) {
-        showError('Ошибка сети');
+        showError(error.message || 'Ошибка сохранения заказа');
     }
 }
 
@@ -127,15 +169,28 @@ async function addUser() {
     const userName = document.getElementById('userName').value.trim();
     if (!userName) return;
 
-    // Моковая реализация добавления пользователя
-    currentState.user = { 
-        id: Date.now(), 
-        name: userName,
-        office: currentState.office
-    };
-    showMenuLink();
-}
+    try {
+        const response = await fetch('/api/users', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                name: userName,
+                office: currentState.office
+            })
+        });
 
+        if (response.ok) {
+            currentState.user = { name: userName };
+            currentState.orderData.user_name = userName;
+            currentState.orderData.create_user = true;
+            showMenuLink();
+        } else {
+            showError('Ошибка создания пользователя');
+        }
+    } catch (error) {
+        showError('Ошибка сети');
+    }
+}
 
 function backToStep1() {
     showStep('step1');
@@ -157,9 +212,7 @@ async function filterUsers() {
 
         const userList = document.getElementById('userList');
         userList.innerHTML = filtered.map(user => `
-            <div class="user-item" 
-                 data-id="${user.id}" 
-                 onclick="selectUser(${user.id}, '${user.name.replace("'", "\\'")}')">
+            <div class="user-item" onclick="selectUser('${user.name}')">
                 ${user.name}
             </div>
         `).join('');
@@ -174,7 +227,6 @@ function backToStep2() {
     document.getElementById('search').value = '';
     filterUsers();
 }
-
 
 function backToMenuLink() {
     showStep('menuLink');
