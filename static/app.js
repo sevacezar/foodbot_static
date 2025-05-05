@@ -13,12 +13,9 @@ const API_BASE_URL = currentEnv.API_URL;
 
 let currentState = {
     office: null,
-    user: null,
-    isNewUser: false,
     orderData: {
         user_name: null,
         office_name: null,
-        create_user: false,
         dish: null
     }
 };
@@ -71,9 +68,7 @@ function selectUser(userName) {
     userElement.classList.add('selected');
     
     setTimeout(() => {
-        currentState.user = { name: userName };
         currentState.orderData.user_name = userName;
-        currentState.orderData.create_user = false;
         checkExistingOrder(userName);
         showMenuLink();
         userElement.classList.remove('selected');
@@ -82,7 +77,9 @@ function selectUser(userName) {
 
 async function checkExistingOrder(userName) {
     try {
-        const response = await etch(`${API_BASE_URL}/api/orders/${encodeURIComponent(userName)}?office=${currentState.orderData.office_name}`);
+        const response = await fetch(
+            `${API_BASE_URL}/api/orders/${encodeURIComponent(userName)}?office=${currentState.orderData.office_name}`
+        );
         if (!response.ok) {
             const errorData = await response.json();
             throw new Error(errorData.error || 'Ошибка проверки заказа');
@@ -107,11 +104,6 @@ function showMenuLink() {
 
 function showOrderForm() {
     showStep('orderForm');
-    
-    if (currentState.isNewUser) {
-        document.getElementById('dish').value = '';
-        document.getElementById('submitBtn').textContent = 'Сделать заказ';
-    }
 }
 
 async function submitOrder() {
@@ -161,36 +153,20 @@ function showError(message) {
 }
 
 function showNameInput() {
-    currentState.isNewUser = true;
     showStep('newUser');
 }
 
 async function addUser() {
     const userName = document.getElementById('userName').value.trim();
-    if (!userName) return;
-
-    try {
-        const response = await fetch('/api/users', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                name: userName,
-                office: currentState.office
-            })
-        });
-
-        if (response.ok) {
-            currentState.user = { name: userName };
-            currentState.orderData.user_name = userName;
-            currentState.orderData.create_user = true;
-            showMenuLink();
-        } else {
-            showError('Ошибка создания пользователя');
-        }
-    } catch (error) {
-        showError('Ошибка сети');
+    if (!userName) {
+        showError('Введите имя пользователя');
+        return;
     }
+
+    currentState.orderData.user_name = userName;
+    showMenuLink();
 }
+
 
 function backToStep1() {
     showStep('step1');
@@ -202,8 +178,8 @@ async function filterUsers() {
     try {
         // Получаем пользователей только при первом переходе на шаг 2
         if (!currentState.cachedUsers) {
-            const response = await fetch(`/api/users?office=${currentState.office}`);
-            currentState.cachedUsers = await response.json();
+            const response = await fetch(`${API_BASE_URL}/api/users?office=${currentState.orderData.office_name}`);
+            currentState.cachedUsers = await response.json().users;
         }
 
         const filtered = currentState.cachedUsers.filter(u => 
@@ -212,8 +188,8 @@ async function filterUsers() {
 
         const userList = document.getElementById('userList');
         userList.innerHTML = filtered.map(user => `
-            <div class="user-item" onclick="selectUser('${user.name}')">
-                ${user.name}
+            <div class="user-item" onclick="selectUser('${user}')">
+                ${user}
             </div>
         `).join('');
     } catch (error) {
