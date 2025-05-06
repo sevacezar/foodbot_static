@@ -25,10 +25,71 @@ const OFFICE_TRANSLATION = {
   South: 'Южного'
 };
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     Telegram.WebApp.ready();
     Telegram.WebApp.expand();
+    await initOfficeSelection();
 });
+
+async function initOfficeSelection() {
+    try {
+        const cafes = await loadCafeData();
+        const availableOffices = Object.entries(cafes)
+            .filter(([_, data]) => data.checkbox === "TRUE")
+            .map(([office]) => office);
+
+        const officeSelect = document.getElementById('office');
+        const step1Title = document.getElementById('step1-title');
+        const infoMessage = document.getElementById('office-info');
+        const currentDate = new Date().toLocaleDateString('ru-RU', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long'
+        }).replace(/(\s\d{4})?$/, ''); // Убираем год, если есть
+        
+        // Обновляем заголовок при успешной загрузке
+        step1Title.textContent = availableOffices.length > 0 
+            ? "Выберите офис для заказа обеда"
+            : `Заказы недоступны`;
+        
+        // Очищаем предыдущие варианты
+        officeSelect.innerHTML = '';
+        
+        if (availableOffices.length === 0) {
+            officeSelect.style.display = 'none';
+            infoMessage.textContent = 'Приносим извинения, попробуйте в следующий рабочий день';
+            infoMessage.style.display = 'block';
+            return;
+        }
+
+        // Добавляем доступные офисы
+        availableOffices.forEach(office => {
+            const option = document.createElement('option');
+            option.value = office;
+            option.textContent = office === 'North' ? 'Северный офис' : 'Южный офис';
+            officeSelect.appendChild(option);
+        });
+
+        // Добавляем информационные сообщения
+        const unavailableOffices = Object.entries(cafes)
+            .filter(([_, data]) => data.checkbox !== "TRUE")
+            .map(([office]) => office);
+
+        if (unavailableOffices.length > 0) {
+            const officeNames = unavailableOffices.map(o => 
+                o === 'North' ? 'Северного' : 'Южного'
+            ).join(' и ');
+            infoMessage.textContent = `Заказ для ${officeNames} офиса временно недоступен`;
+            infoMessage.style.display = 'block';
+        }
+
+    } catch (error) {
+        const step1Title = document.getElementById('step1-title');
+        step1Title.textContent = 'Ошибка загрузки данных';
+        document.getElementById('office-info').textContent = 
+            'Пожалуйста, попробуйте позже';
+    }
+}
 
 function showStep(stepId) {
     document.querySelectorAll('.step').forEach(step => {
@@ -190,7 +251,7 @@ async function loadCafeData() {
     currentState.cafeData = data.cafes; // Кешируем
     return data.cafes;
   } catch (error) {
-    showError('Не удалось загрузить меню');
+    console.error('Cafe data load failed:', error);
     throw error;
   }
 }

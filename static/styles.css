@@ -218,3 +218,11 @@ form {
     animation: user-selected 1s ease;
     border: 2px solid var(--accent-orange);
 }
+
+.info-message {
+    color: #FD6F3D;
+    font-size: 0.9rem;
+    margin-top: 1rem;
+    text-align: center;
+    line-height: 1.4;
+}

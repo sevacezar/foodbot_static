@@ -14,12 +14,12 @@
     <main class="container">
         <!-- Step 1: Office Selection -->
         <section id="step1" class="step active" aria-labelledby="step1-title">
-            <h2 id="step1-title">Выберите офис</h2>
+            <h2 id="step1-title">Загрузка данных...</h2>
             <form onsubmit="loadUsers(); return false;">
                 <select id="office" class="select-box" aria-label="Выберите офис" required>
-                    <option value="North">Северный офис</option>
-                    <option value="South">Южный офис</option>
+                    <!-- Динамически заполнится через JS -->
                 </select>
+                <div id="office-info" class="info-message" style="display: none;"></div>
                 <button type="submit" class="btn-primary">Далее</button>
             </form>
         </section>
