@@ -71,9 +71,14 @@ h2 {
     padding-right: 40px;
 }
 
+.select-box {
+    background-color: var(--input-bg) !important;
+    color: var(--light-text) !important;
+}
+
 .select-box option {
-    background-color: var(--input-bg);
-    color: var(--light-text);
+    background-color: var(--input-bg) !important;
+    color: var(--light-text) !important;
     padding: var(--input-padding);
 }
 
@@ -341,4 +346,14 @@ form {
 
 .loading h2 {
     opacity: 0.7;
+}
+
+@-moz-document url-prefix() {
+    .select-box {
+        color: var(--light-text) !important;
+        text-shadow: 0 0 0 var(--light-text) !important;
+    }
+    .select-box option {
+        background-color: var(--input-bg) !important;
+    }
 }
