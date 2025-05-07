@@ -126,6 +126,7 @@ async function initOfficeSelection() {
         const officeSelect = document.getElementById('office');
         const step1Title = document.getElementById('step1-title');
         const infoMessage = document.getElementById('office-info');
+        const submitButton = step1.querySelector('button[type="submit"]');
         const currentDate = new Date().toLocaleDateString('ru-RU', {
             weekday: 'long',
             day: 'numeric',
@@ -140,11 +141,15 @@ async function initOfficeSelection() {
         
         if (availableOffices.length === 0) {
             officeSelect.style.display = 'none';
+            submitButton.style.display = 'none';
             infoMessage.textContent = 'Приносим извинения, попробуйте в следующий рабочий день';
             infoMessage.style.display = 'block';
             setLoading(step1, false);
             return;
         }
+
+        // Показываем кнопку, если есть доступные офисы
+        submitButton.style.display = 'block';
 
         // Добавляем доступные офисы
         availableOffices.forEach(office => {
