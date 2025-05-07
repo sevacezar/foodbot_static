@@ -41,6 +41,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         dishTextarea.addEventListener('input', adjustHeight);
         // Вызываем один раз при загрузке для установки начальной высоты
         adjustHeight();
+
+        // Предотвращаем отправку формы при нажатии Enter
+        dishTextarea.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+            }
+        });
     }
 });
 
