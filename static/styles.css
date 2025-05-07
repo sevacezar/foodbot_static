@@ -569,7 +569,7 @@ skeleton-user-list {
     opacity: 1;
 }
 
-/* Стили для полей ввода */
+/* Базовые стили для полей ввода */
 .text-input,
 .search-input,
 .select-box {
@@ -578,50 +578,43 @@ skeleton-user-list {
     border: 1px solid var(--border-color);
     border-radius: 8px;
     background: var(--input-bg);
-    color: var(--light-text);
     font-size: 16px;
     transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+/* Специальные стили для текста и курсора */
+.text-input,
+.search-input {
+    color: var(--light-text) !important;
     -webkit-text-fill-color: var(--light-text) !important;
     caret-color: var(--light-text) !important;
     text-shadow: 0 0 0 var(--light-text);
 }
 
-/* Стили для desktop версии */
-@media (min-width: 768px) {
-    .text-input,
-    .search-input,
-    .select-box {
-        -webkit-text-fill-color: var(--light-text) !important;
-        caret-color: var(--light-text) !important;
-        text-shadow: 0 0 0 var(--light-text);
-        outline: none;
-    }
+/* Стили для выделения текста */
+.text-input::selection,
+.search-input::selection {
+    background-color: rgba(253, 111, 61, 0.2) !important;
+    color: var(--light-text) !important;
+    -webkit-text-fill-color: var(--light-text) !important;
+}
 
-    .text-input:focus,
-    .search-input:focus,
-    .select-box:focus {
-        border-color: var(--accent-orange);
-        box-shadow: 0 0 0 2px rgba(253, 111, 61, 0.2);
-        -webkit-text-fill-color: var(--light-text) !important;
-        caret-color: var(--light-text) !important;
-        text-shadow: 0 0 0 var(--light-text);
-    }
+/* Стили для фокуса */
+.text-input:focus,
+.search-input:focus,
+.select-box:focus {
+    outline: none;
+    border-color: var(--accent-orange);
+    box-shadow: 0 0 0 2px rgba(253, 111, 61, 0.2);
+}
 
-    /* Стили для выделения текста */
-    .text-input::selection,
-    .search-input::selection,
-    .select-box::selection {
-        background-color: rgba(253, 111, 61, 0.2);
-        color: var(--light-text);
-    }
-
-    /* Стили для placeholder */
-    .text-input::placeholder,
-    .search-input::placeholder {
-        color: var(--light-text);
-        opacity: 0.7;
-        -webkit-text-fill-color: var(--light-text) !important;
-    }
+/* Стили для placeholder */
+.text-input::placeholder,
+.search-input::placeholder {
+    color: rgba(255, 255, 255, 0.5) !important;
+    -webkit-text-fill-color: rgba(255, 255, 255, 0.5) !important;
+    opacity: 1 !important;
 }
 
 /* Стили для textarea */
@@ -632,17 +625,42 @@ skeleton-user-list {
     line-height: 1.4;
 }
 
+/* Специальные стили для Telegram Desktop */
+@media (min-width: 768px) {
+    .text-input,
+    .search-input {
+        color: var(--light-text) !important;
+        -webkit-text-fill-color: var(--light-text) !important;
+        caret-color: var(--light-text) !important;
+        text-shadow: 0 0 0 var(--light-text);
+    }
+
+    .text-input:focus,
+    .search-input:focus {
+        color: var(--light-text) !important;
+        -webkit-text-fill-color: var(--light-text) !important;
+        caret-color: var(--light-text) !important;
+    }
+
+    .text-input::selection,
+    .search-input::selection {
+        background-color: rgba(253, 111, 61, 0.2) !important;
+        color: var(--light-text) !important;
+        -webkit-text-fill-color: var(--light-text) !important;
+    }
+}
+
 /* Стили для Firefox */
 @-moz-document url-prefix() {
     .text-input,
-    .search-input,
-    .select-box {
-        color: var(--light-text);
+    .search-input {
+        color: var(--light-text) !important;
+        -webkit-text-fill-color: var(--light-text) !important;
     }
     
     .text-input:focus,
-    .search-input:focus,
-    .select-box:focus {
-        color: var(--light-text);
+    .search-input:focus {
+        color: var(--light-text) !important;
+        -webkit-text-fill-color: var(--light-text) !important;
     }
 }
