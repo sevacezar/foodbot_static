@@ -32,23 +32,61 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Добавляем обработчик для авто-изменения высоты textarea
     const dishTextarea = document.getElementById('dish');
-    if (dishTextarea) {
+    const userNameTextarea = document.getElementById('userName');
+    
+    // Функция для настройки textarea
+    const setupTextarea = (textarea) => {
+        if (!textarea) return;
+        
         const adjustHeight = () => {
-            dishTextarea.style.height = 'auto';
-            dishTextarea.style.height = dishTextarea.scrollHeight + 'px';
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
         };
         
-        dishTextarea.addEventListener('input', adjustHeight);
+        textarea.addEventListener('input', adjustHeight);
         // Вызываем один раз при загрузке для установки начальной высоты
         adjustHeight();
 
         // Предотвращаем отправку формы при нажатии Enter
-        dishTextarea.addEventListener('keydown', (e) => {
+        textarea.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
+                // Добавляем перенос строки в текущей позиции курсора
+                const start = textarea.selectionStart;
+                const end = textarea.selectionEnd;
+                const text = textarea.value;
+                textarea.value = text.substring(0, start) + '\n' + text.substring(end);
+                // Устанавливаем курсор после переноса строки
+                textarea.selectionStart = textarea.selectionEnd = start + 1;
+                adjustHeight();
             }
         });
-    }
+
+        // Устанавливаем фокус при клике
+        textarea.addEventListener('click', () => {
+            textarea.focus();
+        });
+    };
+
+    // Настраиваем оба textarea
+    setupTextarea(dishTextarea);
+    setupTextarea(userNameTextarea);
+
+    // Добавляем обработчики для всех полей ввода
+    const inputs = document.querySelectorAll('.text-input, .search-input');
+    inputs.forEach(input => {
+        input.addEventListener('click', () => {
+            input.focus();
+        });
+    });
+
+    // Обработка клика вне полей ввода для скрытия клавиатуры
+    document.addEventListener('click', (e) => {
+        const isInput = e.target.matches('.text-input, .search-input, .select-box');
+        if (!isInput) {
+            document.activeElement.blur();
+        }
+    });
 });
 
 function setLoading(element, isLoading) {

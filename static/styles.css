@@ -61,8 +61,6 @@ h2 {
     min-height: 48px;
     max-height: 200px;
     overflow-y: auto;
-    -webkit-text-fill-color: var(--light-text);
-    caret-color: var(--light-text);
 }
 
 /* Fix for Telegram PC client select dropdown */
@@ -190,8 +188,6 @@ form {
     outline: none;
     border-color: var(--accent-orange);
     box-shadow: 0 0 0 3px rgba(253, 111, 61, 0.2);
-    -webkit-text-fill-color: var(--light-text);
-    caret-color: var(--light-text);
 }
 
 /* Responsive adjustments */

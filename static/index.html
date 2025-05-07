@@ -53,7 +53,8 @@
         <section id="newUser" class="step" aria-labelledby="newUser-title">
             <h2 id="newUser-title">Добавление нового сотрудника</h2>
             <form onsubmit="addUser(); return false;">
-                <input type="text" id="userName" class="text-input" placeholder="Полное ФИО" required aria-label="ФИО нового сотрудника">
+                <div class="skeleton skeleton-text"></div>
+                <textarea id="userName" class="text-input auto-resize" placeholder="Полное ФИО" required aria-label="ФИО нового сотрудника" rows="1"></textarea>
                 <div class="step-buttons">
                     <button type="submit" class="btn-primary">Подтвердить</button>
                     <button type="button" class="btn-back" onclick="backToStep2()">Назад</button>
