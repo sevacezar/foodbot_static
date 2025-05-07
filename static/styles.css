@@ -568,3 +568,81 @@ skeleton-user-list {
     -webkit-text-fill-color: rgba(255, 255, 255, 0.5);
     opacity: 1;
 }
+
+/* Стили для полей ввода */
+.text-input,
+.search-input,
+.select-box {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--input-bg);
+    color: var(--light-text);
+    font-size: 16px;
+    transition: all 0.3s ease;
+    -webkit-text-fill-color: var(--light-text) !important;
+    caret-color: var(--light-text) !important;
+    text-shadow: 0 0 0 var(--light-text);
+}
+
+/* Стили для desktop версии */
+@media (min-width: 768px) {
+    .text-input,
+    .search-input,
+    .select-box {
+        -webkit-text-fill-color: var(--light-text) !important;
+        caret-color: var(--light-text) !important;
+        text-shadow: 0 0 0 var(--light-text);
+        outline: none;
+    }
+
+    .text-input:focus,
+    .search-input:focus,
+    .select-box:focus {
+        border-color: var(--accent-orange);
+        box-shadow: 0 0 0 2px rgba(253, 111, 61, 0.2);
+        -webkit-text-fill-color: var(--light-text) !important;
+        caret-color: var(--light-text) !important;
+        text-shadow: 0 0 0 var(--light-text);
+    }
+
+    /* Стили для выделения текста */
+    .text-input::selection,
+    .search-input::selection,
+    .select-box::selection {
+        background-color: rgba(253, 111, 61, 0.2);
+        color: var(--light-text);
+    }
+
+    /* Стили для placeholder */
+    .text-input::placeholder,
+    .search-input::placeholder {
+        color: var(--light-text);
+        opacity: 0.7;
+        -webkit-text-fill-color: var(--light-text) !important;
+    }
+}
+
+/* Стили для textarea */
+.text-input.auto-resize {
+    min-height: 44px;
+    resize: none;
+    overflow: hidden;
+    line-height: 1.4;
+}
+
+/* Стили для Firefox */
+@-moz-document url-prefix() {
+    .text-input,
+    .search-input,
+    .select-box {
+        color: var(--light-text);
+    }
+    
+    .text-input:focus,
+    .search-input:focus,
+    .select-box:focus {
+        color: var(--light-text);
+    }
+}

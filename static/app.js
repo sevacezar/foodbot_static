@@ -33,6 +33,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Добавляем обработчик для авто-изменения высоты textarea
     const dishTextarea = document.getElementById('dish');
     const userNameTextarea = document.getElementById('userName');
+    const searchInput = document.getElementById('search');
     
     // Функция для настройки textarea
     const setupTextarea = (textarea) => {
@@ -72,20 +73,35 @@ document.addEventListener('DOMContentLoaded', async () => {
     setupTextarea(dishTextarea);
     setupTextarea(userNameTextarea);
 
+    // Настраиваем поле поиска
+    if (searchInput) {
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+            }
+        });
+    }
+
+    // Обработка клика вне полей ввода для скрытия клавиатуры
+    document.addEventListener('click', (e) => {
+        const isInput = e.target.matches('.text-input, .search-input, .select-box');
+        if (!isInput) {
+            // Скрываем клавиатуру для всех активных элементов
+            const activeElement = document.activeElement;
+            if (activeElement && (activeElement.matches('.text-input, .search-input, .select-box'))) {
+                activeElement.blur();
+                // Принудительно скрываем клавиатуру через Telegram WebApp API
+                Telegram.WebApp.HapticFeedback.impactOccurred('light');
+            }
+        }
+    });
+
     // Добавляем обработчики для всех полей ввода
     const inputs = document.querySelectorAll('.text-input, .search-input');
     inputs.forEach(input => {
         input.addEventListener('click', () => {
             input.focus();
         });
-    });
-
-    // Обработка клика вне полей ввода для скрытия клавиатуры
-    document.addEventListener('click', (e) => {
-        const isInput = e.target.matches('.text-input, .search-input, .select-box');
-        if (!isInput) {
-            document.activeElement.blur();
-        }
     });
 });
 
