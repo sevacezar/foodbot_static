@@ -156,19 +156,23 @@ function selectUser(userName) {
     }
     userElement.classList.add('selected');
     
-    // Мгновенный переход с включением скелетона
-    currentState.orderData.user_name = userName;
-    const menuOrderSection = document.getElementById('menuAndOrder');
-    setLoading(menuOrderSection, true);
-    showStep('menuAndOrder');
-    
-    // Запускаем загрузку данных меню и проверку заказа
-    Promise.all([
-        showMenuAndOrder(),
-        checkExistingOrder(userName)
-    ]).catch(console.error);
-    
-    userElement.classList.remove('selected');
+    // Ждем завершения анимации перед переходом к следующему шагу
+    setTimeout(() => {
+        // Мгновенный переход с включением скелетона
+        currentState.orderData.user_name = userName;
+        const menuOrderSection = document.getElementById('menuAndOrder');
+        setLoading(menuOrderSection, true);
+        showStep('menuAndOrder');
+        
+        // Запускаем загрузку данных меню и проверку заказа
+        Promise.all([
+            showMenuAndOrder(),
+            checkExistingOrder(userName)
+        ]).catch(console.error);
+        
+        // Удаляем класс selected после перехода
+        userElement.classList.remove('selected');
+    }, 1500);
 }
 
 async function checkExistingOrder(userName) {
@@ -250,7 +254,10 @@ async function submitOrder() {
         if (!data.success) throw new Error(data.error);
         
         // Успешное сохранение
-        Telegram.WebApp.showAlert('Заказ успешно сохранён!', () => Telegram.WebApp.close());
+        Telegram.WebApp.showAlert(
+            `Заказ "${dishInput.value.trim()}" для пользователя "${currentState.orderData.user_name}" успешно записан в Google Sheets`, 
+            () => Telegram.WebApp.close()
+        );
     } catch (error) {
         showError(error.message);
     } finally {

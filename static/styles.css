@@ -255,14 +255,24 @@ form {
 
 /* Анимация выбора пользователя */
 @keyframes user-selected {
-    0% { background: transparent; }
-    50% { background: rgba(253, 111, 61, 0.2); }
-    100% { background: transparent; }
+    0% { 
+        background: transparent;
+        border: 2px solid transparent;
+    }
+    50% { 
+        background: rgba(253, 111, 61, 0.2);
+        border: 2px solid var(--accent-orange);
+    }
+    100% { 
+        background: transparent;
+        border: 2px solid transparent;
+    }
 }
 
 .user-item.selected {
-    animation: user-selected 1s ease;
-    border: 2px solid var(--accent-orange);
+    animation: user-selected 1.5s ease;
+    border-radius: var(--border-radius);
+    pointer-events: none; /* Предотвращаем повторные клики во время анимации */
 }
 
 .info-message {
@@ -381,7 +391,7 @@ form {
 }
 
 .loading#menuAndOrder .skeleton {
-    display: block !important; // Скелетоны остаются видимыми
+    display: block !important; /* Скелетоны остаются видимыми */
 }
 
 /* Скелетоны для элементов меню */
