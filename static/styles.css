@@ -498,3 +498,25 @@ skeleton-user-list {
     animation: shimmer 1.5s infinite;
     border-radius: var(--border-radius);
 }
+
+/* Мерцание при отправке заказа */
+#menuAndOrder.submitting #submitBtn,
+#menuAndOrder.submitting .btn-back {
+    animation: none;
+}
+
+/* Добавляем скелетоны для кнопок при отправке */
+#menuAndOrder.submitting .skeleton-button {
+    display: block !important;
+}
+
+#menuAndOrder.submitting #submitBtn,
+#menuAndOrder.submitting .btn-back {
+    visibility: hidden;
+}
+
+/* Для поля ввода */
+#menuAndOrder.submitting #dish {
+    opacity: 0.7;
+    background: var(--input-bg);
+}

@@ -1,6 +1,6 @@
 const ENV = {
     DEVELOPMENT: {
-      API_URL: 'https://330e-185-77-216-6.ngrok-free.app', // ngrok URL
+      API_URL: 'https://15a3-185-77-216-6.ngrok-free.app', // ngrok URL
     },
     PRODUCTION: {
       API_URL: 'https://ваш-продакшен-сервер.com',
@@ -216,6 +216,8 @@ async function showMenuAndOrder() {
 
 async function submitOrder() {
     const dishInput = document.getElementById('dish');
+    const submitBtn = document.getElementById('submitBtn');
+    const backBtn = document.querySelector('#menuAndOrder .btn-back');
     const menuOrderSection = document.getElementById('menuAndOrder');
     
     if (!dishInput.value.trim()) {
@@ -225,7 +227,11 @@ async function submitOrder() {
 
     // Блокировка и анимация
     dishInput.disabled = true;
-    setLoading(menuOrderSection, true); // Мерцание всей секции
+    submitBtn.disabled = true;
+    backBtn.disabled = true;
+    
+    // Добавляем мерцание только кнопкам
+    menuOrderSection.classList.add('submitting');
     
     try {
         const response = await fetch(`${API_BASE_URL}/api/orders`, {
@@ -249,7 +255,9 @@ async function submitOrder() {
         showError(error.message);
     } finally {
         dishInput.disabled = false;
-        setLoading(menuOrderSection, false);
+        submitBtn.disabled = false;
+        backBtn.disabled = false;
+        menuOrderSection.classList.remove('submitting');
     }
 }
 
