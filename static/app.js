@@ -31,7 +31,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     await initOfficeSelection();
 });
 
+function setLoading(element, isLoading) {
+    if (isLoading) {
+        element.classList.add('loading');
+    } else {
+        element.classList.remove('loading');
+    }
+}
+
 async function initOfficeSelection() {
+    const step1 = document.getElementById('step1');
+    setLoading(step1, true);
+    
     try {
         const cafes = await loadCafeData();
         const availableOffices = Object.entries(cafes)
@@ -45,20 +56,19 @@ async function initOfficeSelection() {
             weekday: 'long',
             day: 'numeric',
             month: 'long'
-        }).replace(/(\s\d{4})?$/, ''); // Убираем год, если есть
+        }).replace(/(\s\d{4})?$/, '');
         
-        // Обновляем заголовок при успешной загрузке
         step1Title.textContent = availableOffices.length > 0 
             ? "Выберите офис для заказа обеда"
             : `Заказы недоступны`;
         
-        // Очищаем предыдущие варианты
         officeSelect.innerHTML = '';
         
         if (availableOffices.length === 0) {
             officeSelect.style.display = 'none';
             infoMessage.textContent = 'Приносим извинения, попробуйте в следующий рабочий день';
             infoMessage.style.display = 'block';
+            setLoading(step1, false);
             return;
         }
 
@@ -88,6 +98,8 @@ async function initOfficeSelection() {
         step1Title.textContent = 'Ошибка загрузки данных';
         document.getElementById('office-info').textContent = 
             'Пожалуйста, попробуйте позже';
+    } finally {
+        setLoading(step1, false);
     }
 }
 
@@ -99,6 +111,10 @@ function showStep(stepId) {
 }
 
 async function loadUsers() {
+    const step2 = document.getElementById('step2');
+    setLoading(step2, true);
+    showStep('step2');
+    
     const office = document.getElementById('office').value;
     currentState.orderData.office_name = office;
     
@@ -123,9 +139,10 @@ async function loadUsers() {
             </div>
         `).join('');
         currentState.cachedUsers = data.users;
-        showStep('step2');
     } catch (error) {
         showError(error.message || 'Ошибка загрузки пользователей');
+    } finally {
+        setLoading(step2, false);
     }
 }
 
@@ -148,6 +165,9 @@ function selectUser(userName) {
 }
 
 async function checkExistingOrder(userName) {
+    const orderForm = document.getElementById('orderForm');
+    setLoading(orderForm, true);
+    
     try {
         const response = await fetch(
             `${API_BASE_URL}/api/orders/${encodeURIComponent(userName)}?office=${currentState.orderData.office_name}`, 
@@ -169,39 +189,47 @@ async function checkExistingOrder(userName) {
     } catch (error) {
         console.error('Order check failed:', error);
         showError('Ошибка проверки заказа');
+    } finally {
+        setLoading(orderForm, false);
     }
 }
 
 async function showMenuLink() {
-  try {
-    const cafes = await loadCafeData();
-    const office = currentState.orderData.office_name;
+    const menuLink = document.getElementById('menuLink');
+    setLoading(menuLink, true);
     
-    // Обновляем текст
-    document.getElementById('officeName').textContent = OFFICE_TRANSLATION[office];
-    
-    // Обновляем ссылку и название
-    const menuLink = document.querySelector('.menu-link');
-    const cafeInfo = cafes[office];
-    menuLink.href = cafeInfo.menu_url;
-    menuLink.innerHTML = `${cafeInfo.cafe_name} →`;
-    
-    showStep('menuLink');
-  } catch (error) {
-    console.error('Ошибка:', error);
-    backToStep2();
-  }
+    try {
+        const cafes = await loadCafeData();
+        const office = currentState.orderData.office_name;
+        
+        document.getElementById('officeName').textContent = OFFICE_TRANSLATION[office];
+        
+        const menuLinkElement = document.querySelector('.menu-link');
+        const cafeInfo = cafes[office];
+        menuLinkElement.href = cafeInfo.menu_url;
+        menuLinkElement.innerHTML = `${cafeInfo.cafe_name} →`;
+        
+        showStep('menuLink');
+    } catch (error) {
+        console.error('Ошибка:', error);
+        backToStep2();
+    } finally {
+        setLoading(menuLink, false);
+    }
 }
-
 
 function showOrderForm() {
     showStep('orderForm');
 }
 
 async function submitOrder() {
+    const orderForm = document.getElementById('orderForm');
+    setLoading(orderForm, true);
+    
     const dishInput = document.getElementById('dish');
     if (!dishInput.value.trim()) {
         showError('Введите название блюда/блюд');
+        setLoading(orderForm, false);
         return;
     }
 
@@ -215,7 +243,7 @@ async function submitOrder() {
                 username: currentState.orderData.user_name,
                 office: currentState.orderData.office_name,
                 order: currentState.orderData.dish
-        })
+            })
         });
 
         if (!response.ok) {
@@ -233,6 +261,8 @@ async function submitOrder() {
         });
     } catch (error) {
         showError(error.message || 'Ошибка сохранения заказа');
+    } finally {
+        setLoading(orderForm, false);
     }
 }
 
@@ -278,7 +308,6 @@ async function addUser() {
     currentState.orderData.user_name = userName;
     showMenuLink();
 }
-
 
 function backToStep1() {
     showStep('step1');

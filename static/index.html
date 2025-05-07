@@ -14,12 +14,14 @@
     <main class="container">
         <!-- Step 1: Office Selection -->
         <section id="step1" class="step active" aria-labelledby="step1-title">
-            <h2 id="step1-title">Загрузка данных...</h2>
+            <h2 id="step1-title">Выберите офис для заказа обеда</h2>
             <form onsubmit="loadUsers(); return false;">
+                <div class="skeleton skeleton-select"></div>
                 <select id="office" class="select-box" aria-label="Выберите офис" required>
                     <!-- Динамически заполнится через JS -->
                 </select>
                 <div id="office-info" class="info-message" style="display: none;"></div>
+                <div class="skeleton skeleton-button"></div>
                 <button type="submit" class="btn-primary">Далее</button>
             </form>
         </section>
@@ -29,8 +31,12 @@
             <h2 id="step2-title">Найдите себя</h2>
             <form onsubmit="return false;">
                 <input type="text" id="search" class="search-input" placeholder="Введите имя..." oninput="filterUsers()" aria-label="Поиск сотрудника">
-                <div id="userList" class="user-list" role="listbox" aria-label="Список сотрудников"></div>
+                <div id="userList" class="user-list" role="listbox" aria-label="Список сотрудников">
+                    <div class="skeleton skeleton-user-list"></div>
+                </div>
                 <div class="step-buttons">
+                    <div class="skeleton skeleton-button"></div>
+                    <div class="skeleton skeleton-button"></div>
                     <button type="button" class="btn-secondary" onclick="showNameInput()">Я новый сотрудник</button>
                     <button type="button" class="btn-back" onclick="backToStep1()">Назад</button>
                 </div>

@@ -226,3 +226,66 @@ form {
     text-align: center;
     line-height: 1.4;
 }
+
+/* Skeleton Loading Animation */
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.skeleton {
+    background: linear-gradient(90deg, 
+        var(--input-bg) 25%, 
+        var(--border-color) 50%, 
+        var(--input-bg) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: var(--border-radius);
+    display: none;
+    width: var(--element-width);
+    box-sizing: border-box;
+}
+
+.skeleton-text {
+    height: 1em;
+    margin: 0.5em 0;
+}
+
+.skeleton-select {
+    height: 48px;
+    margin: calc(var(--spacing-unit) / 2) 0;
+}
+
+.skeleton-button {
+    height: 48px;
+    margin: calc(var(--spacing-unit) / 2) 0;
+}
+
+.skeleton-user-list {
+    height: 300px;
+    margin: calc(var(--spacing-unit) / 2) 0;
+}
+
+.loading .skeleton {
+    display: block;
+}
+
+.loading .select-box,
+.loading .search-input,
+.loading .text-input,
+.loading .btn-primary,
+.loading .btn-secondary,
+.loading .btn-back,
+.loading .user-item,
+.loading .menu-link {
+    display: none;
+}
+
+.loading h2 {
+    opacity: 0.7;
+}
