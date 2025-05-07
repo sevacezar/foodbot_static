@@ -325,11 +325,11 @@ form {
 }
 
 .loading .select-box,
-.loading .search-input,
+/* .loading .search-input, */
 .loading .text-input,
 .loading .btn-primary,
-.loading .btn-secondary,
-.loading .btn-back,
+/* .loading .btn-secondary, */
+/* .loading .btn-back, */
 .loading .user-item,
 .loading .menu-link {
     display: none;
@@ -446,4 +446,55 @@ form {
 .loading#menuAndOrder #dish::before,
 .loading#menuAndOrder .btn-primary::before {
     display: none;
+}
+
+/* Добавляем мерцание для элементов шага 2 */
+.loading#step2 .search-input,
+.loading#step2 .user-list,
+.loading#step2 .btn-secondary,
+.loading#step2 .btn-back {
+    animation: pulse 1.5s infinite;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Сохраняем оригинальные размеры */
+.loading#step2 .user-list {
+    height: 50vh !important; /* Фиксируем высоту как в оригинале */
+    max-height: 50vh !important;
+    min-height: 200px; /* Минимальная высота для крупного блока */
+}
+
+/* Убираем скелетоны для этих элементов */
+.loading#step2 .skeleton {
+    display: none !important;
+}
+
+/* Стили для скелетонов в секции Step 2 */
+.loading#step2 .skeleton-user-list,
+.loading#step2 .skeleton-button,
+.loading#step2 .skeleton-text {
+    display: block !important;
+}
+
+/* Скрываем оригинальные элементы при загрузке */
+.loading#step2 .search-input,
+.loading#step2 .user-list,
+.loading#step2 .btn-secondary,
+.loading#step2 .btn-back {
+    display: none !important;
+}
+
+/* Фиксируем высоту списка пользователей */
+skeleton-user-list {
+    height: 50vh; /* Как у оригинального списка */
+    margin: calc(var(--spacing-unit) / 2) 0;
+    background: linear-gradient(90deg, 
+        var(--input-bg) 25%, 
+        var(--border-color) 50%, 
+        var(--input-bg) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: var(--border-radius);
 }

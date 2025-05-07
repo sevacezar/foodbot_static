@@ -30,10 +30,16 @@
         <section id="step2" class="step" aria-labelledby="step2-title">
             <h2 id="step2-title">Найдите себя</h2>
             <form onsubmit="return false;">
+                <!-- Скелетон для поля поиска -->
+                <div class="skeleton skeleton-text"></div>
                 <input type="text" id="search" class="search-input" placeholder="Введите имя..." oninput="filterUsers()" aria-label="Поиск сотрудника">
+                
+                <!-- Скелетон для списка -->
+                <div class="skeleton skeleton-user-list"></div>
                 <div id="userList" class="user-list" role="listbox" aria-label="Список сотрудников">
-                    <div class="skeleton skeleton-user-list"></div>
                 </div>
+
+                <!-- Скелетон для кнопок -->
                 <div class="step-buttons">
                     <div class="skeleton skeleton-button"></div>
                     <div class="skeleton skeleton-button"></div>
