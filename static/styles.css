@@ -9,6 +9,12 @@
     --border-radius: 8px;
     --input-padding: 12px;
     --element-width: 100%;
+    --tg-theme-bg-color: var(--dark-bg);
+    --tg-theme-text-color: var(--light-text);
+    --tg-theme-hint-color: rgba(255, 255, 255, 0.5);
+    --tg-theme-link-color: var(--primary-blue);
+    --tg-theme-button-color: var(--primary-blue);
+    --tg-theme-button-text-color: var(--light-text);
 }
 
 body {
@@ -583,13 +589,14 @@ skeleton-user-list {
     box-sizing: border-box;
 }
 
-/* Специальные стили для текста и курсора */
+/* Специальные стили для Telegram WebApp */
 .text-input,
 .search-input {
     color: var(--light-text) !important;
     -webkit-text-fill-color: var(--light-text) !important;
     caret-color: var(--light-text) !important;
     text-shadow: 0 0 0 var(--light-text);
+    background-color: var(--input-bg) !important;
 }
 
 /* Стили для выделения текста */
@@ -598,15 +605,17 @@ skeleton-user-list {
     background-color: rgba(253, 111, 61, 0.2) !important;
     color: var(--light-text) !important;
     -webkit-text-fill-color: var(--light-text) !important;
+    text-shadow: 0 0 0 var(--light-text);
 }
 
 /* Стили для фокуса */
 .text-input:focus,
 .search-input:focus,
 .select-box:focus {
-    outline: none;
-    border-color: var(--accent-orange);
-    box-shadow: 0 0 0 2px rgba(253, 111, 61, 0.2);
+    outline: none !important;
+    border-color: var(--accent-orange) !important;
+    box-shadow: 0 0 0 2px rgba(253, 111, 61, 0.2) !important;
+    background-color: var(--input-bg) !important;
 }
 
 /* Стили для placeholder */
@@ -633,6 +642,7 @@ skeleton-user-list {
         -webkit-text-fill-color: var(--light-text) !important;
         caret-color: var(--light-text) !important;
         text-shadow: 0 0 0 var(--light-text);
+        background-color: var(--input-bg) !important;
     }
 
     .text-input:focus,
@@ -640,6 +650,7 @@ skeleton-user-list {
         color: var(--light-text) !important;
         -webkit-text-fill-color: var(--light-text) !important;
         caret-color: var(--light-text) !important;
+        background-color: var(--input-bg) !important;
     }
 
     .text-input::selection,
@@ -647,6 +658,7 @@ skeleton-user-list {
         background-color: rgba(253, 111, 61, 0.2) !important;
         color: var(--light-text) !important;
         -webkit-text-fill-color: var(--light-text) !important;
+        text-shadow: 0 0 0 var(--light-text);
     }
 }
 
@@ -656,11 +668,41 @@ skeleton-user-list {
     .search-input {
         color: var(--light-text) !important;
         -webkit-text-fill-color: var(--light-text) !important;
+        background-color: var(--input-bg) !important;
     }
     
     .text-input:focus,
     .search-input:focus {
         color: var(--light-text) !important;
         -webkit-text-fill-color: var(--light-text) !important;
+        background-color: var(--input-bg) !important;
     }
+}
+
+/* Дополнительные стили для Telegram WebApp */
+.tg-app {
+    --tg-theme-bg-color: var(--dark-bg);
+    --tg-theme-text-color: var(--light-text);
+    --tg-theme-hint-color: rgba(255, 255, 255, 0.5);
+    --tg-theme-link-color: var(--primary-blue);
+    --tg-theme-button-color: var(--primary-blue);
+    --tg-theme-button-text-color: var(--light-text);
+}
+
+/* Принудительные стили для всех состояний */
+.text-input:not(:focus),
+.search-input:not(:focus) {
+    color: var(--light-text) !important;
+    -webkit-text-fill-color: var(--light-text) !important;
+    caret-color: var(--light-text) !important;
+    background-color: var(--input-bg) !important;
+}
+
+/* Стили для активного состояния */
+.text-input:active,
+.search-input:active {
+    color: var(--light-text) !important;
+    -webkit-text-fill-color: var(--light-text) !important;
+    caret-color: var(--light-text) !important;
+    background-color: var(--input-bg) !important;
 }
