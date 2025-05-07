@@ -219,20 +219,32 @@ async function showMenuLink() {
 }
 
 function showOrderForm() {
+    const orderForm = document.getElementById('orderForm');
+    setLoading(orderForm, true);
     showStep('orderForm');
+    
+    // Имитируем небольшую задержку для анимации загрузки
+    setTimeout(() => {
+        setLoading(orderForm, false);
+    }, 500);
 }
 
 async function submitOrder() {
     const orderForm = document.getElementById('orderForm');
-    setLoading(orderForm, true);
-    
     const dishInput = document.getElementById('dish');
+    
     if (!dishInput.value.trim()) {
         showError('Введите название блюда/блюд');
-        setLoading(orderForm, false);
         return;
     }
 
+    // Блокируем поле ввода
+    dishInput.disabled = true;
+    
+    // Показываем анимацию только для кнопок
+    const buttonsContainer = orderForm.querySelector('.step-buttons');
+    buttonsContainer.classList.add('loading');
+    
     currentState.orderData.dish = dishInput.value.trim();
 
     try {
@@ -256,13 +268,18 @@ async function submitOrder() {
             throw new Error(data.error);
         }
 
+        // Добавляем небольшую задержку перед показом уведомления
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
         Telegram.WebApp.showAlert('Заказ успешно сохранён!', () => {
             Telegram.WebApp.close();
         });
     } catch (error) {
         showError(error.message || 'Ошибка сохранения заказа');
     } finally {
-        setLoading(orderForm, false);
+        // Разблокируем поле ввода и убираем анимацию загрузки
+        dishInput.disabled = false;
+        buttonsContainer.classList.remove('loading');
     }
 }
 

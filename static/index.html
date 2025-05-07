@@ -70,10 +70,17 @@
         <section id="orderForm" class="step" aria-labelledby="orderForm-title">
             <h2 id="orderForm-title">Ваш заказ</h2>
             <form onsubmit="submitOrder(); return false;">
+                <div class="skeleton skeleton-text"></div>
                 <input type="text" id="dish" class="text-input" placeholder="Введите название блюда" required aria-label="Название блюда">
                 <div class="step-buttons">
-                    <button type="submit" id="submitBtn" class="btn-primary">Подтвердить заказ</button>
-                    <button type="button" class="btn-back" onclick="backToMenuLink()">Назад</button>
+                    <div class="skeleton-button-container">
+                        <div class="skeleton skeleton-button"></div>
+                        <button type="submit" id="submitBtn" class="btn-primary">Подтвердить заказ</button>
+                    </div>
+                    <div class="skeleton-button-container">
+                        <div class="skeleton skeleton-button"></div>
+                        <button type="button" class="btn-back" onclick="backToMenuLink()">Назад</button>
+                    </div>
                 </div>
                 <div id="orderStatus" class="status-message" role="status" aria-live="polite"></div>
             </form>

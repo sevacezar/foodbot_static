@@ -123,6 +123,29 @@ h2 {
     box-sizing: border-box;
 }
 
+.skeleton-button-container {
+    flex: 1;
+    min-width: 120px;
+    position: relative;
+}
+
+.skeleton-button-container .skeleton {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+}
+
+.loading .skeleton-button-container .skeleton {
+    display: block;
+}
+
+.loading .skeleton-button-container button {
+    visibility: hidden;
+}
+
 /* Form styles */
 form {
     width: var(--element-width);
@@ -252,8 +275,10 @@ form {
 }
 
 .skeleton-text {
-    height: 1em;
-    margin: 0.5em 0;
+    height: 48px;
+    margin: calc(var(--spacing-unit) / 2) 0;
+    padding: var(--input-padding);
+    border: 2px solid var(--border-color);
 }
 
 .skeleton-select {
@@ -271,6 +296,7 @@ form {
     margin: calc(var(--spacing-unit) / 2) 0;
 }
 
+/* Loading states */
 .loading .skeleton {
     display: block;
 }
@@ -284,6 +310,15 @@ form {
 .loading .user-item,
 .loading .menu-link {
     display: none;
+}
+
+/* Button loading state */
+.step-buttons.loading .skeleton {
+    display: block;
+}
+
+.step-buttons.loading button {
+    visibility: hidden;
 }
 
 .loading h2 {
