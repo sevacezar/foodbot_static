@@ -55,34 +55,23 @@
             </form>
         </section>
 
-        <!-- Menu Link -->
-        <section id="menuLink" class="step" aria-labelledby="menuLink-title">
+        <!-- Menu Link & Order Form -->
+        <section id="menuAndOrder" class="step" aria-labelledby="menuLink-title">
             <h2 id="menuLink-title">Меню кафе</h2>
             <p>Для <span id="officeName"></span> офиса доступно по ссылке:</p>
+            <div class="skeleton-menu-link"></div>
             <a href="#" class="menu-link" target="_blank" rel="noopener noreferrer">Загрузка...</a>
-            <div class="step-buttons">
-                <button type="button" class="btn-primary" onclick="showOrderForm()">Перейти к заказу</button>
-                <button type="button" class="btn-back" onclick="backToStep2()">Назад</button>
-            </div>
-        </section>
-
-        <!-- Order Form -->
-        <section id="orderForm" class="step" aria-labelledby="orderForm-title">
-            <h2 id="orderForm-title">Ваш заказ</h2>
+            
+            <h2 id="menuLink-title">Ваш заказ</h2>
+            
             <form onsubmit="submitOrder(); return false;">
                 <div class="skeleton skeleton-text"></div>
                 <input type="text" id="dish" class="text-input" placeholder="Введите название блюда" required aria-label="Название блюда">
                 <div class="step-buttons">
-                    <div class="skeleton-button-container">
-                        <div class="skeleton skeleton-button"></div>
-                        <button type="submit" id="submitBtn" class="btn-primary">Подтвердить заказ</button>
-                    </div>
-                    <div class="skeleton-button-container">
-                        <div class="skeleton skeleton-button"></div>
-                        <button type="button" class="btn-back" onclick="backToMenuLink()">Назад</button>
-                    </div>
+                    <button type="submit" id="submitBtn" class="btn-primary">Подтвердить заказ</button>
+                    <button type="button" class="btn-back" onclick="backToStep2()">Назад</button>
                 </div>
-                <div id="orderStatus" class="status-message" role="status" aria-live="polite"></div>
+                <div id="orderStatus" class="status-message"></div>
             </form>
         </section>
     </main>

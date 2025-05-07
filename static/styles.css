@@ -357,3 +357,93 @@ form {
         background-color: var(--input-bg) !important;
     }
 }
+
+/* Мерцание элементов при загрузке */
+.loading#menuAndOrder .menu-link,
+.loading#menuAndOrder .text-input,
+.loading#menuAndOrder .btn-primary {
+    animation: pulse 1.5s infinite;
+    position: relative;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.3; }
+    100% { opacity: 1; }
+}
+
+.loading#menuAndOrder .menu-link,
+.loading#menuAndOrder .text-input,
+.loading#menuAndOrder .btn-primary,
+.loading#menuAndOrder .btn-back {
+    animation: pulse 1.5s infinite;
+    position: relative;
+}
+
+.loading#menuAndOrder .skeleton {
+    display: block !important; // Скелетоны остаются видимыми
+}
+
+/* Скелетоны для элементов меню */
+.loading#menuAndOrder .menu-link,
+.loading#menuAndOrder #dish,
+.loading#menuAndOrder .btn-primary {
+    position: relative;
+    overflow: hidden;
+}
+
+.loading#menuAndOrder .menu-link::before,
+.loading#menuAndOrder #dish::before,
+.loading#menuAndOrder .btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, 
+        var(--input-bg) 25%, 
+        var(--border-color) 50%, 
+        var(--input-bg) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+/* Скелетоны для элементов меню */
+.skeleton-menu-link {
+    height: 48px;
+    margin: 20px 0;
+    background: linear-gradient(90deg, 
+        var(--input-bg) 25%, 
+        var(--border-color) 50%, 
+        var(--input-bg) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: var(--border-radius);
+    display: none;
+}
+
+.loading .skeleton-menu-link {
+    display: block;
+}
+
+/* Убираем старые стили мерцания */
+.loading#menuAndOrder .menu-link,
+.loading#menuAndOrder .text-input,
+.loading#menuAndOrder .btn-primary,
+.loading#menuAndOrder .btn-back {
+    animation: none;
+}
+
+.loading#menuAndOrder .menu-link::before,
+.loading#menuAndOrder #dish::before,
+.loading#menuAndOrder .btn-primary::before {
+    display: none;
+}

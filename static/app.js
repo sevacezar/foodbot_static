@@ -156,30 +156,30 @@ function selectUser(userName) {
     }
     userElement.classList.add('selected');
     
-    setTimeout(() => {
-        currentState.orderData.user_name = userName;
-        checkExistingOrder(userName);
-        showMenuLink();
-        userElement.classList.remove('selected');
-    }, 800);
+    // Мгновенный переход с включением скелетона
+    currentState.orderData.user_name = userName;
+    const menuOrderSection = document.getElementById('menuAndOrder');
+    setLoading(menuOrderSection, true);
+    showStep('menuAndOrder');
+    
+    // Запускаем загрузку данных меню и проверку заказа
+    Promise.all([
+        showMenuAndOrder(),
+        checkExistingOrder(userName)
+    ]).catch(console.error);
+    
+    userElement.classList.remove('selected');
 }
 
 async function checkExistingOrder(userName) {
-    const orderForm = document.getElementById('orderForm');
-    setLoading(orderForm, true);
-    
+    const menuOrderSection = document.getElementById('menuAndOrder');
     try {
         const response = await fetch(
             `${API_BASE_URL}/api/orders/${encodeURIComponent(userName)}?office=${currentState.orderData.office_name}`, 
-            {
-                headers: {'ngrok-skip-browser-warning': 'true'}
-            }
+            { headers: {'ngrok-skip-browser-warning': 'true'} }
         );
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'Ошибка проверки заказа');
-        }
         
+        if (!response.ok) return;
         const data = await response.json();
         
         if (data.order) {
@@ -187,66 +187,46 @@ async function checkExistingOrder(userName) {
             document.getElementById('submitBtn').textContent = 'Изменить заказ';
         }
     } catch (error) {
-        console.error('Order check failed:', error);
-        showError('Ошибка проверки заказа');
+        console.error('Error checking existing order:', error);
     } finally {
-        setLoading(orderForm, false);
+        // Выключаем скелетоны после всех операций
+        setLoading(menuOrderSection, false);
     }
 }
 
-async function showMenuLink() {
-    const menuLink = document.getElementById('menuLink');
-    setLoading(menuLink, true);
-    
+// Заменяем вызов showMenuLink() и showOrderForm()
+async function showMenuAndOrder() {
     try {
+        // Загружаем данные кафе
         const cafes = await loadCafeData();
         const office = currentState.orderData.office_name;
-        
-        document.getElementById('officeName').textContent = OFFICE_TRANSLATION[office];
-        
-        const menuLinkElement = document.querySelector('.menu-link');
         const cafeInfo = cafes[office];
-        menuLinkElement.href = cafeInfo.menu_url;
-        menuLinkElement.innerHTML = `${cafeInfo.cafe_name} →`;
         
-        showStep('menuLink');
+        // Обновляем информацию о меню
+        document.getElementById('officeName').textContent = OFFICE_TRANSLATION[office];
+        const menuLinkElement = document.querySelector('.menu-link');
+        menuLinkElement.href = cafeInfo.menu_url;
+        menuLinkElement.textContent = cafeInfo.cafe_name;
+        
     } catch (error) {
-        console.error('Ошибка:', error);
-        backToStep2();
-    } finally {
-        setLoading(menuLink, false);
+        console.error('Error loading menu data:', error);
+        showError('Ошибка загрузки меню');
     }
-}
-
-function showOrderForm() {
-    const orderForm = document.getElementById('orderForm');
-    setLoading(orderForm, true);
-    showStep('orderForm');
-    
-    // Имитируем небольшую задержку для анимации загрузки
-    setTimeout(() => {
-        setLoading(orderForm, false);
-    }, 500);
 }
 
 async function submitOrder() {
-    const orderForm = document.getElementById('orderForm');
     const dishInput = document.getElementById('dish');
+    const menuOrderSection = document.getElementById('menuAndOrder');
     
     if (!dishInput.value.trim()) {
         showError('Введите название блюда/блюд');
         return;
     }
 
-    // Блокируем поле ввода
+    // Блокировка и анимация
     dishInput.disabled = true;
+    setLoading(menuOrderSection, true); // Мерцание всей секции
     
-    // Показываем анимацию только для кнопок
-    const buttonsContainer = orderForm.querySelector('.step-buttons');
-    buttonsContainer.classList.add('loading');
-    
-    currentState.orderData.dish = dishInput.value.trim();
-
     try {
         const response = await fetch(`${API_BASE_URL}/api/orders`, {
             method: 'POST',
@@ -254,32 +234,22 @@ async function submitOrder() {
             body: JSON.stringify({
                 username: currentState.orderData.user_name,
                 office: currentState.orderData.office_name,
-                order: currentState.orderData.dish
+                order: dishInput.value.trim()
             })
         });
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'Ошибка сохранения');
-        }
-
+        if (!response.ok) throw new Error('Ошибка сохранения');
         const data = await response.json();
-        if (!data.success) {
-            throw new Error(data.error);
-        }
-
-        // Добавляем небольшую задержку перед показом уведомления
-        await new Promise(resolve => setTimeout(resolve, 500));
         
-        Telegram.WebApp.showAlert('Заказ успешно сохранён!', () => {
-            Telegram.WebApp.close();
-        });
+        if (!data.success) throw new Error(data.error);
+        
+        // Успешное сохранение
+        Telegram.WebApp.showAlert('Заказ успешно сохранён!', () => Telegram.WebApp.close());
     } catch (error) {
-        showError(error.message || 'Ошибка сохранения заказа');
+        showError(error.message);
     } finally {
-        // Разблокируем поле ввода и убираем анимацию загрузки
         dishInput.disabled = false;
-        buttonsContainer.classList.remove('loading');
+        setLoading(menuOrderSection, false);
     }
 }
 
@@ -322,8 +292,17 @@ async function addUser() {
         return;
     }
 
+    // Мгновенный переход с включением скелетона
     currentState.orderData.user_name = userName;
-    showMenuLink();
+    const menuOrderSection = document.getElementById('menuAndOrder');
+    setLoading(menuOrderSection, true);
+    showStep('menuAndOrder');
+    
+    // Запускаем загрузку данных меню и проверку заказа
+    Promise.all([
+        showMenuAndOrder(),
+        checkExistingOrder(userName)
+    ]).catch(console.error);
 }
 
 function backToStep1() {
