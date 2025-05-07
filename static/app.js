@@ -29,6 +29,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     Telegram.WebApp.ready();
     Telegram.WebApp.expand();
     await initOfficeSelection();
+    
+    // Добавляем обработчик для авто-изменения высоты textarea
+    const dishTextarea = document.getElementById('dish');
+    if (dishTextarea) {
+        const adjustHeight = () => {
+            dishTextarea.style.height = 'auto';
+            dishTextarea.style.height = dishTextarea.scrollHeight + 'px';
+        };
+        
+        dishTextarea.addEventListener('input', adjustHeight);
+        // Вызываем один раз при загрузке для установки начальной высоты
+        adjustHeight();
+    }
 });
 
 function setLoading(element, isLoading) {

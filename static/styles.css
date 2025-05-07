@@ -57,6 +57,10 @@ h2 {
     font-size: 16px;
     transition: all 0.3s ease;
     box-sizing: border-box;
+    resize: none;
+    min-height: 48px;
+    max-height: 200px;
+    overflow-y: auto;
 }
 
 /* Fix for Telegram PC client select dropdown */
@@ -529,4 +533,28 @@ skeleton-user-list {
 #menuAndOrder.submitting #dish {
     opacity: 0.7;
     background: var(--input-bg);
+}
+
+.text-input.auto-resize {
+    height: auto;
+    overflow-y: hidden;
+}
+
+/* Fix for textarea scrollbar */
+.text-input.auto-resize::-webkit-scrollbar {
+    width: 8px;
+}
+
+.text-input.auto-resize::-webkit-scrollbar-track {
+    background: var(--input-bg);
+    border-radius: 4px;
+}
+
+.text-input.auto-resize::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+}
+
+.text-input.auto-resize::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-orange);
 }
