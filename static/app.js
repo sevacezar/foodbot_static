@@ -25,6 +25,8 @@ const OFFICE_TRANSLATION = {
   South: 'Южного'
 };
 
+const initData = window.Telegram.WebApp.initData; // Данные пользователя Telegram 
+
 document.addEventListener('DOMContentLoaded', async () => {
     Telegram.WebApp.ready();
     Telegram.WebApp.expand();
@@ -319,7 +321,11 @@ async function submitOrder() {
     try {
         const response = await fetch(`${API_BASE_URL}/api/orders`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'ngrok-skip-browser-warning': 'true' },
+            headers: { 
+                'Content-Type': 'application/json',
+                'ngrok-skip-browser-warning': 'true',
+                'X-Telegram-Init-Data': initData
+            },
             body: JSON.stringify({
                 username: currentState.orderData.user_name,
                 office: currentState.orderData.office_name,
