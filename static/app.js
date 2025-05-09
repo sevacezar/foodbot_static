@@ -1,6 +1,6 @@
 const ENV = {
     DEVELOPMENT: {
-      API_URL: 'https://jd3d4n-178-72-88-187.ru.tuna.am', // Tuna tunnel
+      API_URL: 'https://792a-185-77-216-6.ngrok-free.app', // Ngrok tunnel
     },
     PRODUCTION: {
       API_URL: 'https://ваш-продакшен-сервер.com',
