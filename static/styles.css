@@ -67,6 +67,7 @@ h2 {
     min-height: 48px;
     max-height: 200px;
     overflow-y: auto;
+    field-sizing: auto;
 }
 
 /* Fix for Telegram PC client select dropdown */
@@ -705,4 +706,22 @@ skeleton-user-list {
     -webkit-text-fill-color: var(--light-text) !important;
     caret-color: var(--light-text) !important;
     background-color: var(--input-bg) !important;
+}
+
+.text-input.auto-resize {
+    min-height: 48px; /* Минимальная высота */
+    height: auto; /* Автоматическая высота */
+    overflow-y: hidden !important; /* Важно: убираем скролл */
+    resize: none; /* Запрещаем ручное изменение размера */
+    line-height: 1.4;
+    transition: height 0.2s ease;
+    box-sizing: border-box; /* Учитываем padding в высоте */
+}
+
+/* Гарантируем работу в Firefox */
+@-moz-document url-prefix() {
+    .text-input.auto-resize {
+        height: auto;
+        min-height: 48px;
+    }
 }

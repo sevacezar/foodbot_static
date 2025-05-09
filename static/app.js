@@ -44,6 +44,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const adjustHeight = () => {
             textarea.style.height = 'auto';
             textarea.style.height = textarea.scrollHeight + 'px';
+            textarea.style.overflowY = 'hidden'; // Гарантированно убираем скролл
         };
         
         textarea.addEventListener('input', adjustHeight);
@@ -258,6 +259,7 @@ function selectUser(userName) {
 
 async function checkExistingOrder(userName) {
     const menuOrderSection = document.getElementById('menuAndOrder');
+    const dishTextarea = document.getElementById('dish');
     try {
         const response = await fetch(
             `${API_BASE_URL}/api/orders/${encodeURIComponent(userName)}?office=${currentState.orderData.office_name}`, 
@@ -268,7 +270,12 @@ async function checkExistingOrder(userName) {
         const data = await response.json();
         
         if (data.order) {
-            document.getElementById('dish').value = data.order;
+            dishTextarea.value = data.order;
+            setTimeout(() => {
+                dishTextarea.style.height = 'auto'; // Сбрасываем высоту
+                dishTextarea.style.height = dishTextarea.scrollHeight + 'px'; // Устанавливаем новую высоту
+                dishTextarea.scrollTop = dishTextarea.scrollHeight; // Прокручиваем вниз
+            }, 10);
             document.getElementById('submitBtn').textContent = 'Изменить заказ';
         }
     } catch (error) {
