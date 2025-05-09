@@ -1,6 +1,6 @@
 const ENV = {
     DEVELOPMENT: {
-      API_URL: 'https://15a3-185-77-216-6.ngrok-free.app', // ngrok URL
+      API_URL: 'https://d186-2a0c-f040-0-3434-00-6.ngrok-free.app', // ngrok URL
     },
     PRODUCTION: {
       API_URL: 'https://ваш-продакшен-сервер.com',
