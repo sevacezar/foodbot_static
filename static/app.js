@@ -229,8 +229,12 @@ async function loadUsers() {
 }
 
 function selectUser(userName) {
+
+    // Сначала сбрасываем предыдущее состояние
+    document.getElementById('dish').value = '';
+    document.getElementById('submitBtn').textContent = 'Подтвердить заказ';
+
     const userElements = document.querySelectorAll('.user-item');
-    
     const userElement = Array.from(userElements).find(el => el.textContent.includes(userName));
     if (!userElement) {
         showError('Пользователь не найден');
@@ -446,10 +450,17 @@ async function filterUsers() {
 }
 
 function backToStep2() {
-    showStep('step2');
-    // Сброс поиска при возврате
+    // Сбрасываем состояние заказа
+    document.getElementById('dish').value = '';
+    document.getElementById('submitBtn').textContent = 'Подтвердить заказ';
+    document.getElementById('orderStatus').textContent = '';
+    
+    // Сбрасываем кэшированных пользователей и поиск
     document.getElementById('search').value = '';
-    filterUsers();
+    currentState.cachedUsers = null;
+    
+    showStep('step2');
+    filterUsers(); // Обновляем список пользователей
 }
 
 function backToMenuLink() {

@@ -70,17 +70,16 @@ h2 {
     field-sizing: auto;
 }
 
-/* Fix for Telegram PC client select dropdown */
 .select-box {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    position: relative;
+    padding-right: 40px; /* Место для иконки */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23FD6F3D' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 12px center;
-    background-size: 16px;
-    padding-right: 40px;
+    background-size: 20px;
+    cursor: pointer;
 }
+
 
 .select-box {
     background-color: var(--input-bg) !important;
@@ -571,8 +570,8 @@ skeleton-user-list {
 /* Fix for placeholder color in Telegram Desktop */
 .text-input::placeholder,
 .search-input::placeholder {
-    color: rgba(255, 255, 255, 0.5);
-    -webkit-text-fill-color: rgba(255, 255, 255, 0.5);
+    color: rgba(255, 255, 255, 0.2);
+    -webkit-text-fill-color: rgba(255, 255, 255, 0.2);
     opacity: 1;
 }
 
@@ -622,8 +621,8 @@ skeleton-user-list {
 /* Стили для placeholder */
 .text-input::placeholder,
 .search-input::placeholder {
-    color: rgba(255, 255, 255, 0.5) !important;
-    -webkit-text-fill-color: rgba(255, 255, 255, 0.5) !important;
+    color: rgb(158, 158, 158) !important;
+    -webkit-text-fill-color: rgba(158, 158, 158) !important;
     opacity: 1 !important;
 }
 
