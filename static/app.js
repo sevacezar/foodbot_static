@@ -1,6 +1,6 @@
 const ENV = {
     DEVELOPMENT: {
-      API_URL: 'https://d186-2a0c-f040-0-3434-00-6.ngrok-free.app', // ngrok URL
+      API_URL: 'https://jd3d4n-178-72-88-187.ru.tuna.am', // Tuna tunnel
     },
     PRODUCTION: {
       API_URL: 'https://ваш-продакшен-сервер.com',
@@ -201,7 +201,7 @@ async function loadUsers() {
     
     try {
         const response = await fetch(`${API_BASE_URL}/api/users?office=${office}`, {
-            headers: {'ngrok-skip-browser-warning': 'true'}
+            headers: {'ngrok-skip-browser-warning': 'true', 'tuna-skip-browser-warning': 'true'}
         });
         if (!response.ok) {
             const errorData = await response.json();
@@ -261,7 +261,7 @@ async function checkExistingOrder(userName) {
     try {
         const response = await fetch(
             `${API_BASE_URL}/api/orders/${encodeURIComponent(userName)}?office=${currentState.orderData.office_name}`, 
-            { headers: {'ngrok-skip-browser-warning': 'true'} }
+            { headers: {'ngrok-skip-browser-warning': 'true', 'tuna-skip-browser-warning': 'true'} }
         );
         
         if (!response.ok) return;
@@ -324,6 +324,7 @@ async function submitOrder() {
             headers: { 
                 'Content-Type': 'application/json',
                 'ngrok-skip-browser-warning': 'true',
+                'tuna-skip-browser-warning': 'true',
                 'X-Telegram-Init-Data': initData
             },
             body: JSON.stringify({
@@ -358,7 +359,7 @@ async function loadCafeData() {
   
   try {
     const response = await fetch(`${API_BASE_URL}/api/food-data`, {
-      headers: {'ngrok-skip-browser-warning': 'true'}
+      headers: {'ngrok-skip-browser-warning': 'true', 'tuna-skip-browser-warning': 'true'}
     });
     if (!response.ok) throw new Error('Ошибка загрузки данных');
     
@@ -416,7 +417,7 @@ async function filterUsers() {
         // Получаем пользователей только при первом переходе на шаг 2
         if (!currentState.cachedUsers) {
             const response = await fetch(`${API_BASE_URL}/api/users?office=${currentState.orderData.office_name}`, {
-                headers: {'ngrok-skip-browser-warning': 'true'}
+                headers: {'ngrok-skip-browser-warning': 'true', 'tuna-skip-browser-warning': 'true'}
             });
             const data = await response.json();
             currentState.cachedUsers = data.users;
