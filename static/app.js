@@ -28,6 +28,14 @@ const OFFICE_TRANSLATION = {
 const initData = window.Telegram.WebApp.initData; // Данные пользователя Telegram 
 
 document.addEventListener('DOMContentLoaded', async () => {
+    // Определяем, является ли клиент Telegram Desktop
+    const isTelegramDesktop = window.Telegram.WebApp.platform === 'tdesktop';
+    
+    if (isTelegramDesktop) {
+        // Добавляем специальный класс для десктопной версии
+        document.getElementById('office').classList.add('tg-desktop');
+    }
+    
     Telegram.WebApp.ready();
     Telegram.WebApp.expand();
     await initOfficeSelection();
