@@ -212,16 +212,9 @@ async function loadUsers() {
         const response = await fetch(`${API_BASE_URL}/api/users?office=${office}`, {
             headers: {'ngrok-skip-browser-warning': 'true', 'tuna-skip-browser-warning': 'true'}
         });
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'Ошибка сервера');
-        }
-
+        if (!response.ok) throw new Error();
         const data = await response.json();
-        if (!data.success) {
-            throw new Error(data.error);
-        }
-
+        if (!data.success) throw new Error();
         const userList = document.getElementById('userList');
         userList.innerHTML = data.users.map(user => `
             <div class="user-item" onclick="selectUser('${user}')">
@@ -230,7 +223,8 @@ async function loadUsers() {
         `).join('');
         currentState.cachedUsers = data.users;
     } catch (error) {
-        showError(error.message || 'Ошибка загрузки пользователей');
+        Telegram.WebApp.showAlert('Что-то пошло не так. Пожалуйста, сделайте заказ вручную через Google-таблицу.', () => Telegram.WebApp.close());
+        return;
     } finally {
         setLoading(step2, false);
     }
@@ -277,10 +271,9 @@ async function checkExistingOrder(userName) {
             `${API_BASE_URL}/api/orders/${encodeURIComponent(userName)}?office=${currentState.orderData.office_name}`, 
             { headers: {'ngrok-skip-browser-warning': 'true', 'tuna-skip-browser-warning': 'true'} }
         );
-        
-        if (!response.ok) return;
+        if (!response.ok) throw new Error();
         const data = await response.json();
-        
+        if (data.success === false) throw new Error();
         if (data.order) {
             dishTextarea.value = data.order;
             setTimeout(() => {
@@ -291,7 +284,8 @@ async function checkExistingOrder(userName) {
             document.getElementById('submitBtn').textContent = 'Изменить заказ';
         }
     } catch (error) {
-        console.error('Error checking existing order:', error);
+        Telegram.WebApp.showAlert('Что-то пошло не так. Пожалуйста, сделайте заказ вручную через Google-таблицу.', () => Telegram.WebApp.close());
+        return;
     } finally {
         // Выключаем скелетоны после всех операций
         setLoading(menuOrderSection, false);
@@ -305,16 +299,15 @@ async function showMenuAndOrder() {
         const cafes = await loadCafeData();
         const office = currentState.orderData.office_name;
         const cafeInfo = cafes[office];
-        
+        if (!cafeInfo) throw new Error();
         // Обновляем информацию о меню
         document.getElementById('officeName').textContent = OFFICE_TRANSLATION[office];
         const menuLinkElement = document.querySelector('.menu-link');
         menuLinkElement.href = cafeInfo.menu_url;
         menuLinkElement.textContent = cafeInfo.cafe_name;
-        
     } catch (error) {
-        console.error('Error loading menu data:', error);
-        showError('Ошибка загрузки меню');
+        Telegram.WebApp.showAlert('Что-то пошло не так. Пожалуйста, сделайте заказ вручную через Google-таблицу.', () => Telegram.WebApp.close());
+        return;
     }
 }
 
@@ -353,18 +346,23 @@ async function submitOrder() {
             })
         });
 
-        if (!response.ok) throw new Error('Ошибка сохранения');
+        if (!response.ok) throw new Error();
         const data = await response.json();
         
-        if (!data.success) throw new Error(data.error);
+        if (!data.success) throw new Error();
         
         // Успешное сохранение
-        Telegram.WebApp.showAlert(
-            `Заказ "${dishInput.value.trim()}" для пользователя "${currentState.orderData.user_name}" успешно записан в Google Sheets`, 
-            () => Telegram.WebApp.close()
-        );
+        if (data.sent_message) {
+            Telegram.WebApp.close();
+        } else {
+            Telegram.WebApp.showAlert(
+                `Заказ "${dishInput.value.trim()}" для пользователя "${currentState.orderData.user_name}" успешно записан в Google Sheets`, 
+                () => Telegram.WebApp.close()
+            );
+        }
     } catch (error) {
-        showError(error.message);
+        Telegram.WebApp.showAlert('Что-то пошло не так. Пожалуйста, сделайте заказ вручную через Google-таблицу.', () => Telegram.WebApp.close());
+        return;
     } finally {
         dishInput.disabled = false;
         submitBtn.disabled = false;
@@ -380,15 +378,15 @@ async function loadCafeData() {
     const response = await fetch(`${API_BASE_URL}/api/food-data`, {
       headers: {'ngrok-skip-browser-warning': 'true', 'tuna-skip-browser-warning': 'true'}
     });
-    if (!response.ok) throw new Error('Ошибка загрузки данных');
+    if (!response.ok) throw new Error();
     
     const data = await response.json();
-    if (!data.success) throw new Error(data.error);
+    if (!data.success) throw new Error();
     
     currentState.cafeData = data.cafes; // Кешируем
     return data.cafes;
   } catch (error) {
-    console.error('Cafe data load failed:', error);
+    Telegram.WebApp.showAlert('Что-то пошло не так. Пожалуйста, сделайте заказ вручную через Google-таблицу.', () => Telegram.WebApp.close());
     throw error;
   }
 }
@@ -418,11 +416,15 @@ async function addUser() {
     setLoading(menuOrderSection, true);
     showStep('menuAndOrder');
     
-    // Запускаем загрузку данных меню и проверку заказа
-    Promise.all([
-        showMenuAndOrder(),
-        checkExistingOrder(userName)
-    ]).catch(console.error);
+    try {
+        await Promise.all([
+            showMenuAndOrder(),
+            checkExistingOrder(userName)
+        ]);
+    } catch (error) {
+        Telegram.WebApp.showAlert('Что-то пошло не так. Пожалуйста, сделайте заказ вручную через Google-таблицу.', () => Telegram.WebApp.close());
+        return;
+    }
 }
 
 function backToStep1() {
@@ -438,7 +440,9 @@ async function filterUsers() {
             const response = await fetch(`${API_BASE_URL}/api/users?office=${currentState.orderData.office_name}`, {
                 headers: {'ngrok-skip-browser-warning': 'true', 'tuna-skip-browser-warning': 'true'}
             });
+            if (!response.ok) throw new Error();
             const data = await response.json();
+            if (!data.success) throw new Error();
             currentState.cachedUsers = data.users;
         }
 
@@ -453,7 +457,8 @@ async function filterUsers() {
             </div>
         `).join('');
     } catch (error) {
-        showError('Ошибка фильтрации');
+        Telegram.WebApp.showAlert('Что-то пошло не так. Пожалуйста, сделайте заказ вручную через Google-таблицу.', () => Telegram.WebApp.close());
+        return;
     }
 }
 
