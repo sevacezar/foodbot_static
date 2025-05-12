@@ -356,7 +356,7 @@ async function submitOrder() {
             Telegram.WebApp.close();
         } else {
             Telegram.WebApp.showAlert(
-                `Заказ "${dishInput.value.trim()}" для пользователя "${currentState.orderData.user_name}" успешно записан в Google Sheets`, 
+                `Заказ "${dishInput.value.trim()}" для пользователя "${currentState.orderData.user_name}" успешно записан в Google таблицу. Однако, что-то пошло не так при отправке сообщения с информацией о заказе в Telegram.`, 
                 () => Telegram.WebApp.close()
             );
         }
