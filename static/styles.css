@@ -73,7 +73,7 @@ h2 {
 .select-box {
     position: relative;
     padding-right: 40px; /* Место для иконки */
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23FD6F3D' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%233B8BEA' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 12px center;
     background-size: 20px;
@@ -731,7 +731,7 @@ skeleton-user-list {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23FD6F3D' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%233B8BEA' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") !important;
     background-repeat: no-repeat !important;
     background-position: right 12px center !important;
     background-size: 20px !important;
@@ -756,4 +756,20 @@ skeleton-user-list {
 .select-box:active {
     background-color: var(--input-bg) !important;
     color: var(--light-text) !important;
+}
+
+/* Явное переопределение для Telegram Desktop */
+@media (hover: hover) and (pointer: fine) {
+    /* Это сработает для устройств с мышью (десктопов) */
+    .select-box {
+        background-color: var(--input-bg) !important;
+        color: var(--light-text) !important;
+        -webkit-text-fill-color: var(--light-text) !important;
+        text-shadow: 0 0 0 var(--light-text) !important;
+    }
+    
+    .select-box option {
+        background-color: var(--input-bg) !important;
+        color: var(--light-text) !important;
+    }
 }
